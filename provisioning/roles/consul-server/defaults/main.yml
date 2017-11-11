@@ -1,0 +1,8 @@
+---
+consul_version: "1.0.0"
+consul_package_url: "https://releases.hashicorp.com/consul/{{1.0.0}}/consul_{{1.0.0}}_linux_amd64.zip"
+
+consul_server_hosts:
+  - localhost
+
+consul_domain: "consul"

@@ -1,0 +1,11 @@
+{
+    "server": true,
+    "bootstrap_expect": {{ consul_server_hosts | length }},
+    "retry_join": [{% for host in consul_server_hosts %}{% if loop.index > 1 %}, {% endif %}"{{host}}"{% endfor %}],
+    "data_dir": "/var/consul",
+    "domain": "{{ consul_domain }}",
+    "enable_script_checks": true,
+    "check_update_interval": "1m"
+    "log_level": "INFO",
+    "enable_syslog": true
+}

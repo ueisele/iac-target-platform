@@ -1,0 +1,43 @@
+---
+- name: Download and Unarchive Consul
+  unarchive:
+    src: "{{ consul_package_url }}"
+    dest: /usr/local/bin
+    remote_src: yes
+
+- name: Add Consul User
+  user:
+    name: consul
+    createhome: no
+
+- name: Create Consul Configuration Directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - /etc/consul.d/server 
+    - /etc/consul.d/client 
+
+- name: Create Consul Data Directory
+  file:
+    path: /var/consul
+    state: directory
+    owner: consul
+    group: consul
+    mode: 0755
+
+
+
+- name: Set Zookeeper
+  command: bash -c "echo zk://{% for host in zookeeper_hosts %}{% if loop.index > 1 %},{% endif %}{{host}}:2181{% endfor %}/mesos > /etc/mesos/zk"
+
+- name: Set Mesos Master Configs
+  command: bash -c "echo {{ item.value }} > /etc/mesos-master/{{ item.key }}"
+  with_dict: "{{ config_mesos_master }}"
+
+- name: Service Mesos Master Enabled and Started
+  systemd:
+    name: mesos-master
+    enabled: yes
+    state: started
