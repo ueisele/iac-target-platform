@@ -1,0 +1,5 @@
+/tmp
+/.vagrant
+/provisioning/roles-galaxy
+*.retry
+*.log

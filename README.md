@@ -1,1 +1,0 @@
-# iac-vagrant-platform

@@ -1,0 +1,7 @@
+---
+mesos_deb_package_url: http://repos.mesosphere.com/debian/pool/main/m/mesos/mesos_1.4.0-2.0.1.debian8_amd64.deb
+
+zookeeper_hosts:
+  - localhost
+
+config_mesos_master:
