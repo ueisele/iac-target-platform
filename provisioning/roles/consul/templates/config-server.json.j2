@@ -1,0 +1,16 @@
+{
+    "server": true,
+    "ui": true,
+    "bootstrap_expect": {{ consul_server_hosts | length }},
+    "retry_join": [{% for host in consul_server_hosts %}{% if loop.index > 1 %}, {% endif %}"{{host}}"{% endfor %}],
+    "rejoin_after_leave": true,
+    "leave_on_terminate": true,
+    "bind_addr": "{{ consul_bind_ip }}",
+    "client_addr": "127.0.0.1 {{ consul_bind_ip }}",
+    "domain": "{{ consul_domain }}",
+    "data_dir": "/var/consul",
+    "enable_script_checks": true,
+    "check_update_interval": "1m",
+    "log_level": "INFO",
+    "enable_syslog": true
+}

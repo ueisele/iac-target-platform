@@ -1,0 +1,14 @@
+# {{ansible_managed}}
+
+[Unit]
+Description=Consul-Server
+
+[Service]
+Type=simple
+User=consul
+Group=consul
+ExecStart=/usr/local/bin/consul agent -config-dir /etc/consul.d/server
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

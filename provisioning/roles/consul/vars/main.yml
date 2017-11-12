@@ -1,0 +1,2 @@
+---
+consul_server: "{{ (consul_server_hosts | intersect(inventory_hostname)) == [inventory_hostname] }}"

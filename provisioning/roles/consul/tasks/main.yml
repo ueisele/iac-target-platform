@@ -1,0 +1,65 @@
+---
+- name: Resolve Host Ip
+  command: "hostname -i"
+  register: hostname_command_output
+
+- set_fact:
+    consul_bind_ip: "{{ hostname_command_output.stdout }}"
+
+- name: Install the package "unzip"
+  apt:
+    name: unzip
+
+- name: Download and Unarchive Consul
+  unarchive:
+    src: "{{ consul_package_url }}"
+    dest: /usr/local/bin
+    remote_src: yes
+
+- name: Add Consul User
+  user:
+    name: consul
+    createhome: no
+
+- name: Create Consul Data Directory
+  file:
+    path: /var/consul
+    state: directory
+    owner: consul
+    group: consul
+    mode: 0755
+
+- name: Create Consul Configuration Directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - /etc/consul.d/server 
+    - /etc/consul.d/client 
+
+- name: Consul Server Configuration File.
+  template: src=config-server.json.j2 dest=/etc/consul.d/server/config.json
+
+- name: Consul Client Configuration File.
+  template: src=config-client.json.j2 dest=/etc/consul.d/client/config.json
+
+- name: Systemd Script for Consul Server.
+  template: src=consul-server.service.j2 dest=/lib/systemd/system/consul-server.service
+
+- name: Systemd Script for Consul Client.
+  template: src=consul-client.service.j2 dest=/lib/systemd/system/consul-client.service
+
+- name: Service Consul Server Enabled and Started
+  systemd:
+    name: consul-server
+    enabled: yes
+    state: restarted
+  when: consul_server == true  
+
+- name: Service Consul Client Enabled and Started
+  systemd:
+    name: consul-client
+    enabled: yes
+    state: restarted
+  when: consul_server != true  
