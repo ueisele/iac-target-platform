@@ -51,6 +51,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.galaxy_roles_path = 'provisioning/roles-galaxy'
     ansible.groups = groups   
     ansible.playbook = "provisioning/playbook.yml"
+    ansible.extra_vars = {
+      domainname: domainname
+    }    
   end # end provision
 
   config.landrush.enabled = true

@@ -1,4 +1,13 @@
 ---
+- name: Resolvconf Setup
+  hosts: all
+  become: yes
+  roles:
+    - role: resolvconf
+      config_resolvconf:
+        - "domain {{ domainname }}"
+        - "search {{ domainname }}"
+
 #- name: Java Setup
 #  hosts: all
 #  become: yes
@@ -22,7 +31,7 @@
     - role: consul
       consul_version: "1.0.0"
       consul_server_hosts: "{{ groups['consul-server'] }}"
-      consul_domain: "consul.platform.novatec"
+      consul_domain: "consul.{{ domainname }}"
 
 #- name: Mesos Master Cluster Setup
 #  hosts: mesos-master

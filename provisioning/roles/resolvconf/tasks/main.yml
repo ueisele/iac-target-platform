@@ -1,0 +1,17 @@
+---
+- name: Install the package "resolvconf"
+  apt:
+    name: resolvconf
+
+- name: Ensure configuration is set
+  command: bash -c "echo {{ item }} >> /etc/resolvconf/resolv.conf.d/base"
+  with_items: "{{ config_resolvconf }}"
+
+- name: Service Resolvconf Enabled and Started
+  systemd:
+    name: resolvconf
+    enabled: yes
+    state: restarted
+
+- name: Update Configuration
+  command: resolvconf -u
