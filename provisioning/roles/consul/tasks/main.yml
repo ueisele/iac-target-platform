@@ -10,9 +10,19 @@
   apt:
     name: unzip
 
-- name: Download and Unarchive Consul
+- name: Download Consul and Check
+  get_url:
+    url: "{{ consul_package_url }}"
+    dest: /tmp/consul_{{ consul_version }}.zip
+    checksum: "{{ consul_checksum }}"
+    timeout: 100
+  register: result  
+  until: result|succeeded
+  retries: 5  
+
+- name: Unarchive Consul
   unarchive:
-    src: "{{ consul_package_url }}"
+    src: /tmp/consul_{{ consul_version }}.zip
     dest: /usr/local/bin
     remote_src: yes
 
@@ -31,24 +41,29 @@
 
 - name: Create Consul Configuration Directory
   file:
-    path: "{{ item }}"
+    path: /etc/consul.d
     state: directory
     mode: 0755
-  with_items:
-    - /etc/consul.d/server 
-    - /etc/consul.d/client 
+
+- name: Ensure Consul Web UI Service is registerd.
+  copy: src="{{ role_path }}/files/consului.consulservice.json" dest=/etc/consul.d/consului.consulservice.json
+  when: consul_server == true  
 
 - name: Consul Server Configuration File.
-  template: src=config-server.json.j2 dest=/etc/consul.d/server/config.json
+  template: src=config-server.json.j2 dest=/etc/consul.d/config.json
+  when: consul_server == true  
 
 - name: Consul Client Configuration File.
-  template: src=config-client.json.j2 dest=/etc/consul.d/client/config.json
+  template: src=config-client.json.j2 dest=/etc/consul.d/config.json
+  when: consul_server != true  
 
 - name: Systemd Script for Consul Server.
   template: src=consul-server.service.j2 dest=/lib/systemd/system/consul-server.service
+  when: consul_server == true  
 
 - name: Systemd Script for Consul Client.
   template: src=consul-client.service.j2 dest=/lib/systemd/system/consul-client.service
+  when: consul_server != true  
 
 - name: Service Consul Server Enabled and Started
   systemd:
@@ -70,7 +85,7 @@
 
 - name: Ensure dnsmasq forwards DNS requests to Consul
   command: sh -c "echo \"server=/{{ consul_domain }}/127.0.0.1#8600\" > /etc/dnsmasq.d/consul.conf"
-  
+
 - name: Service dnsmasq Enabled and Started
   systemd:
     name: dnsmasq

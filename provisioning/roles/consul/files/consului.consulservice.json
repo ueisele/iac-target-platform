@@ -1,0 +1,7 @@
+{
+	"service": {
+		"name": "consului",
+		"tags": ["ui"],
+		"port": 8500
+	}
+}
