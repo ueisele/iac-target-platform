@@ -62,4 +62,17 @@
     name: consul-client
     enabled: yes
     state: restarted
-  when: consul_server != true  
+  when: consul_server != true
+
+- name: Ensure package dnsmasq is installed
+  apt:
+    name: dnsmasq
+
+- name: Ensure dnsmasq forwards DNS requests to Consul
+  command: sh -c "echo \"server=/{{ consul_domain }}/127.0.0.1#8600\" > /etc/dnsmasq.d/consul.conf"
+  
+- name: Service dnsmasq Enabled and Started
+  systemd:
+    name: dnsmasq
+    enabled: yes
+    state: restarted

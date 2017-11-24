@@ -29,9 +29,9 @@
   become: yes
   roles:
     - role: consul
-      consul_version: "1.0.0"
+      consul_version: "1.0.1"
       consul_server_hosts: "{{ groups['consul-server'] }}"
-      consul_domain: "consul.{{ domainname }}"
+      consul_domain: "consul"
 
 #- name: Mesos Master Cluster Setup
 #  hosts: mesos-master
