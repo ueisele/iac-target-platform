@@ -1,6 +1,6 @@
 VAGRANTFILE_API_VERSION = "2"
 
-domainname = "platform.dev"
+domainname = ENV['DOMAIN_NAME']
 
 cluster = {
   "lb1" => { :ip => "192.168.17.10", :cpus => 2, :mem => 2048 },

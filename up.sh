@@ -1,11 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
-cd $(dirname $(readlink -f $0))
+pushd . > /dev/null
+cd $(dirname ${BASH_SOURCE[0]})
+CWD_UP=`pwd`
+source ./env.sh
+popd > /dev/null
 
-vagrant up --no-provision
-vagrant provision
+function up () {
+    (cd ${CWD_UP} && vagrant up --no-provision)
+    (cd ${CWD_UP} && vagrant provision)
+}
 
-sudo sh -c 'echo "server=/platform.dev/127.0.0.1#10053" > /etc/NetworkManager/dnsmasq.d/vagrant-landrush_platform-dev.conf'
-sudo sh -c 'echo "server=/consul/192.168.17.20#8600" > /etc/NetworkManager/dnsmasq.d/consul_platform-dev.conf'
-sudo sh -c 'echo "address=/public.platform.dev/192.168.17.10" > /etc/NetworkManager/dnsmasq.d/public_platform-dev.conf'
-sudo systemctl restart NetworkManager
+if [ "${BASH_SOURCE[0]}" == "$0" ]; then
+    up
+fi

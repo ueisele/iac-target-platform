@@ -1,9 +1,15 @@
-#!/bin/bash
-cd $(dirname $(readlink -f $0))
+#!/usr/bin/env bash
+set -e
+pushd . > /dev/null
+cd $(dirname ${BASH_SOURCE[0]})
+CWD_DESTROY=`pwd`
+source ./env.sh
+popd > /dev/null
 
-sudo rm /etc/NetworkManager/dnsmasq.d/vagrant-landrush_platform-dev.conf || true
-sudo rm /etc/NetworkManager/dnsmasq.d/consul_platform-dev.conf || true
-sudo rm /etc/NetworkManager/dnsmasq.d/public_platform-dev.conf || true
-sudo systemctl restart NetworkManager
+function destroy () {
+    (cd ${CWD_DESTROY} && vagrant destroy -f)
+}
 
-vagrant destroy -f
+if [ "${BASH_SOURCE[0]}" == "$0" ]; then
+    destroy
+fi

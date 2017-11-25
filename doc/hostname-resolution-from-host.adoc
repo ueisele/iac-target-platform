@@ -1,0 +1,56 @@
+= Hostname Resolution from Host
+
+By default it is not possible to access nodes and services of the platform by name from the host system.
+In order to enable hostname resolution from the host system some additional services are required. 
+
+== Prerequisites
+First ensure that the following services are installed:
+
+* Systemd
+* NetworkManager
+* Dnsmasq
+
+Additionally ensure that the `Dnsmasq` service is disabled and not active.
+
+----
+$ systemctl status dnsmasq
+● dnsmasq.service - A lightweight DHCP and caching DNS server
+Loaded: loaded (/usr/lib/systemd/system/dnsmasq.service; disabled; vendor preset: disabled)
+Active: inactive (dead)
+----
+
+If this is not the case disable and stop the `Dnsmasq` service.
+
+----
+$ systemctl disable dnsmasq
+$ systemctl stop dnsmasq
+----
+
+After that instruct `NetworkManager` to use `Dnsmasq` for DNS by changeing the `dns` attribute in the `[main]` section of `/etc/NetworkManager/NetworkManager.conf`.
+
+./etc/NetworkManager/NetworkManager.conf
+----
+[main]
+dns=dnsmasq
+----
+
+Now restart `NetworkManager` and ensure that the service is enabled and active.
+
+----
+$ systemctl restart NetworkManager
+$ systemctl status NetworkManager
+● NetworkManager.service - Network Manager
+Loaded: loaded (/usr/lib/systemd/system/NetworkManager.service; enabled; vendor preset: disabled)
+Active: active (running)
+----
+
+== Enable Hostname Resolution
+Hostname resulution from the host is enabled by adding DNS forwards for the platform domain to `Dnsmasq`.
+
+The simplest way to achive this is just running the provided script:
+
+    ./dns-enable.sh
+
+In order to disable the hostname resolution just run:
+
+    ./dns-disable.sh
