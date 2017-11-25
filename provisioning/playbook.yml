@@ -34,6 +34,15 @@
       consul_server_hosts: "{{ groups['consul-server'] }}"
       consul_domain: "consul"
 
+- name: Traefik Setup
+  hosts: public-lb
+  become: yes
+  roles:
+    - role: traefik
+      traefik_version: "1.4.4"
+      traefik_checksum: "sha256:24f2afbaa6d86af9e9a00e854db672715eb4c4eef80d40bad15f917525d61292"
+      public_domain: "public.{{ domainname }}"
+
 #- name: Mesos Master Cluster Setup
 #  hosts: mesos-master
 #  become: yes

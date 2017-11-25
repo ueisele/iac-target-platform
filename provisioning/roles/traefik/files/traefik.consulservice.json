@@ -1,7 +1,7 @@
 {
 	"service": {
-		"name": "consului",
+		"name": "traefik",
 		"tags": ["traefik.enable=true"],
-		"port": 8500
+		"port": 8080
 	}
 }

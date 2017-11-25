@@ -1,0 +1,44 @@
+# {{ansible_managed}}
+
+################################################################
+# Global configuration
+################################################################
+
+defaultEntryPoints = ["http"]
+
+[entryPoints]
+    [entryPoints.http]
+    address = ":80"
+
+[retry]
+
+[healthcheck]
+interval = "30s"
+
+################################################################
+# Web configuration backend
+################################################################
+
+[web]
+address = ":8080"
+
+[web.metrics.prometheus]
+
+################################################################
+# Consul KV configuration backend
+################################################################
+
+[consul]
+endpoint = "127.0.0.1:8500"
+watch = true
+prefix = "traefik"
+
+################################################################
+# Consul Catalog configuration backend
+################################################################
+
+[consulCatalog]
+endpoint = "127.0.0.1:8500"
+domain = "{{ public_domain }}"
+prefix = "traefik"
+exposedByDefault = false

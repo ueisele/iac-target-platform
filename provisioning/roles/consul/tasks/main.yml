@@ -45,39 +45,26 @@
     state: directory
     mode: 0755
 
-- name: Ensure Consul Web UI Service is registerd.
+- name: Ensure Consul Web UI Service is registerd
   copy: src="{{ role_path }}/files/consului.consulservice.json" dest=/etc/consul.d/consului.consulservice.json
   when: consul_server == true  
 
-- name: Consul Server Configuration File.
-  template: src=config-server.json.j2 dest=/etc/consul.d/config.json
+- name: Consul Server Configuration File
+  template: src=config-server.json.j2 dest=/etc/consul.d/config-server.json
   when: consul_server == true  
 
-- name: Consul Client Configuration File.
-  template: src=config-client.json.j2 dest=/etc/consul.d/config.json
+- name: Consul Client Configuration File
+  template: src=config-client.json.j2 dest=/etc/consul.d/config-client.json
   when: consul_server != true  
 
-- name: Systemd Script for Consul Server.
-  template: src=consul-server.service.j2 dest=/lib/systemd/system/consul-server.service
-  when: consul_server == true  
+- name: Systemd Script for Consul
+  template: src=consul.service.j2 dest=/lib/systemd/system/consul.service
 
-- name: Systemd Script for Consul Client.
-  template: src=consul-client.service.j2 dest=/lib/systemd/system/consul-client.service
-  when: consul_server != true  
-
-- name: Service Consul Server Enabled and Started
+- name: Service Consul Enabled and Started
   systemd:
-    name: consul-server
+    name: consul
     enabled: yes
     state: restarted
-  when: consul_server == true  
-
-- name: Service Consul Client Enabled and Started
-  systemd:
-    name: consul-client
-    enabled: yes
-    state: restarted
-  when: consul_server != true
 
 - name: Ensure package dnsmasq is installed
   apt:

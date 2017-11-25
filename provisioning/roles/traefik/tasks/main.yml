@@ -1,0 +1,48 @@
+---
+- name: Download Traefik and Check
+  get_url:
+    url: "{{ traefik_package_url }}"
+    dest: /usr/local/bin/traefik{{ traefik_version }}
+    checksum: "{{ traefik_checksum }}"
+    timeout: 100
+  register: result  
+  until: result|succeeded
+  retries: 5 
+
+- name: Ensure Traefik is Executable
+  file:
+    path: /usr/local/bin/traefik{{ traefik_version }}
+    mode: 0755
+
+- name: Create Symlink to Traefik Binary
+  file:
+    src: /usr/local/bin/traefik{{ traefik_version }}
+    dest: /usr/local/bin/traefik
+    state: link
+
+- name: Add Traefik User
+  user:
+    name: traefik
+    createhome: no
+
+- name: Create Traefik Configuration Directory
+  file:
+    path: /etc/traefik
+    state: directory
+    mode: 0755
+
+- name: Traefik Configuration File
+  template: src=traefik.toml.j2 dest=/etc/traefik/traefik.toml
+
+- name: Systemd Script for Traefik
+  template: src=traefik.service.j2 dest=/lib/systemd/system/traefik.service
+
+- name: Traefik Enabled and Started
+  systemd:
+    name: traefik
+    enabled: yes
+    state: restarted
+
+- name: Ensure Traefik is registerd as Consul service
+  copy: src="{{ role_path }}/files/traefik.consulservice.json" dest=/etc/consul.d/traefik.consulservice.json
+  notify: restart consul agent

@@ -1,0 +1,12 @@
+# {{ansible_managed}}
+
+[Unit]
+Description=Traefik
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/traefik -c /etc/traefik/traefik.toml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
