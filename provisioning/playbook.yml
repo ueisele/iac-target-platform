@@ -35,8 +35,8 @@
   become: yes
   roles:
     - role: consul
-      consul_version: "1.0.1"
-      consul_checksum: "sha256:eac5755a1d19e4b93f6ce30caaf7b3bd8add4557b143890b1c07f5614a667a68"
+      consul_version: "1.0.2"
+      consul_checksum: "sha256:418329f0f4fc3f18ef08674537b576e57df3f3026f258794b4b4b611beae6c9b"
       consul_server_hosts: "{{ groups['consul-server'] }}"
       consul_domain: "consul"
 
@@ -45,8 +45,8 @@
   become: yes
   roles:
     - role: traefik
-      traefik_version: "1.4.4"
-      traefik_checksum: "sha256:24f2afbaa6d86af9e9a00e854db672715eb4c4eef80d40bad15f917525d61292"
+      traefik_version: "1.4.6"
+      traefik_checksum: "sha256:ce46543db09c8b885e71d8a3b89251ba4b9e1bee56f238cc05651c9eb29e32b2"
       public_domain: "public.{{ domainname }}"
 
 - name: Heartbeat Setup for Public LB
