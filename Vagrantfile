@@ -1,10 +1,11 @@
 VAGRANTFILE_API_VERSION = "2"
 
 domainname = ENV['DOMAIN_NAME']
+publiclb_ip = ENV['PUBLICLB_IP']
 
 cluster = {
-  "lb1" => { :ip => "192.168.17.10", :cpus => 2, :mem => 2048 },
-  "lb2" => { :ip => "192.168.17.11", :cpus => 2, :mem => 2048 },
+  "lb1" => { :ip => "192.168.17.11", :cpus => 2, :mem => 2048 },
+  "lb2" => { :ip => "192.168.17.12", :cpus => 2, :mem => 2048 },
   "discovery1" => { :ip => "192.168.17.20", :cpus => 2, :mem => 2048 },
   "discovery2" => { :ip => "192.168.17.21", :cpus => 2, :mem => 2048 },
   "discovery3" => { :ip => "192.168.17.22", :cpus => 2, :mem => 2048 },
@@ -52,7 +53,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.groups = groups   
     ansible.playbook = "provisioning/playbook.yml"
     ansible.extra_vars = {
-      domainname: domainname
+      domainname: domainname,
+      publiclb_ip: publiclb_ip
     }    
   end # end provision
 

@@ -1,0 +1,36 @@
+---
+- name: Ensure package "heartbeat" is installed
+  apt:
+    name: heartbeat
+
+- name: Ensure package "net-tools" is installed
+  apt:
+    name: net-tools
+
+- name: Gather Facts - Host Network Interface
+  command: bash -c "ifconfig | grep -B1 `hostname -i` | grep -o '^\w*'"
+  register: interface_command_output
+- set_fact:
+    heartbeat_interface: "{{ interface_command_output.stdout }}"
+
+- name: Ensure heartbeat is configured
+  template: src=ha.cf.j2 dest=/etc/ha.d/ha.cf
+
+- name: Ensure haresources for heartbeat are set
+  template: src=haresources.j2 dest=/etc/ha.d/haresources
+
+- name: Ensure authkeys for heartbeat are set
+  template: src=authkeys.j2 dest=/etc/ha.d/authkeys mode=0600
+
+- name: Ensure that Systemd service is always restarted
+  lineinfile:
+    path: /lib/systemd/system/heartbeat.service
+    regexp: '^Restart='
+    line: 'Restart=always'
+
+- name: Ensure Heartbeat is Enabled and Started
+  systemd:
+    name: heartbeat
+    enabled: yes
+    daemon_reload: yes
+    state: restarted

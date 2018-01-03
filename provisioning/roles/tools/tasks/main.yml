@@ -1,0 +1,18 @@
+---
+- name: Ensure that /sbin is in path
+  lineinfile:
+    path: /etc/bash.bashrc
+    regexp: '^export PATH=\$PATH:/sbin$'
+    line: 'export PATH=$PATH:/sbin'
+
+- name: Install the package "net-tools"
+  apt:
+    name: net-tools
+
+- name: Install the package "dnsutils"
+  apt:
+    name: dnsutils
+
+- name: Install the package "vim"
+  apt:
+    name: vim    

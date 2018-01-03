@@ -1,0 +1,3 @@
+---
+heartbeat_authkey: "ha-cluster"
+heartbeat_prefered_host: "{{ heartbeat_member_hosts[0] }}"

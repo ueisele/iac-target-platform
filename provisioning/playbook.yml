@@ -1,4 +1,10 @@
 ---
+- name: Common Tools
+  hosts: all
+  become: yes
+  roles:
+    - role: tools
+
 - name: Resolvconf Setup
   hosts: all
   become: yes
@@ -42,6 +48,15 @@
       traefik_version: "1.4.4"
       traefik_checksum: "sha256:24f2afbaa6d86af9e9a00e854db672715eb4c4eef80d40bad15f917525d61292"
       public_domain: "public.{{ domainname }}"
+
+- name: Heartbeat Setup for Public LB
+  hosts: public-lb
+  become: yes
+  roles:
+    - role: heartbeat
+      heartbeat_authkey: "heartbeat.{{ domainname }}"
+      heartbeat_virtual_ip: "{{ publiclb_ip }}"
+      heartbeat_member_hosts: "{{ groups['public-lb'] }}"
 
 #- name: Mesos Master Cluster Setup
 #  hosts: mesos-master
