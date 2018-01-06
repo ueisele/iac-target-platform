@@ -4,21 +4,21 @@ domainname = ENV['DOMAIN_NAME']
 publiclb_ip = ENV['PUBLICLB_IP']
 
 cluster = {
-  "lb1" => { :ip => "192.168.17.11", :cpus => 2, :mem => 2048 },
-  "lb2" => { :ip => "192.168.17.12", :cpus => 2, :mem => 2048 },
   "discovery1" => { :ip => "192.168.17.20", :cpus => 2, :mem => 2048 },
   "discovery2" => { :ip => "192.168.17.21", :cpus => 2, :mem => 2048 },
   "discovery3" => { :ip => "192.168.17.22", :cpus => 2, :mem => 2048 },
+  "lb1" => { :ip => "192.168.17.11", :cpus => 2, :mem => 2048 },
+  "lb2" => { :ip => "192.168.17.12", :cpus => 2, :mem => 2048 },
   "worker1"    => { :ip => "192.168.17.100", :cpus => 4, :mem => 6144 },
   "worker2"    => { :ip => "192.168.17.101", :cpus => 4, :mem => 6144 }
 }
 
 groups = {
-  "public-lb" => ["lb1", "lb2"],
-  "public-dns" => ["lb1", "lb2"],
   "zookeeper" => ["discovery1", "discovery2", "discovery3"],
   "consul-server" => ["discovery1", "discovery2", "discovery3"],
-  "consul-agent" => ["lb1", "lb2", "worker1", "worker2"]
+  "consul-agent" => ["lb1", "lb2", "worker1", "worker2"],
+  "public-lb" => ["lb1", "lb2"],
+  "public-dns" => ["lb1", "lb2"]
 }
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|

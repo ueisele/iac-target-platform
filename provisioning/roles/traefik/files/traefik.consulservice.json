@@ -1,7 +1,16 @@
 {
 	"service": {
 		"name": "traefik",
-		"tags": ["traefik.enable=true"],
 		"port": 8080
-	}
+	},
+	"check": {
+		"id": "traefik",
+		"name": "Traefik Status",
+		"service_id": "traefik",
+		"http": "http://127.0.0.1:8080/ping",
+		"tls_skip_verify": false,
+		"method": "GET",
+		"interval": "10s",
+        "timeout": "3s"
+	  }
 }

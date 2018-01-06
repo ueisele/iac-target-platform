@@ -1,0 +1,22 @@
+[Unit]
+Description=Heartbeat High Availability Cluster Communication and Membership
+After=network.target
+Requires=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+User=root
+KillMode=process
+ExecStart=/usr/lib/heartbeat/heartbeat -f
+ExecStop=/usr/lib/heartbeat/heartbeat -k
+PIDFile=/var/run/heartbeat.pid
+
+# If heartbeat/pacemaker doesn't stop, its probably waiting on a cluster
+# resource.  Sending -KILL will just get the node fenced
+SendSIGKILL=no
+
+# Restart options include: no, on-success, on-failure, on-abort or always
+Restart=always

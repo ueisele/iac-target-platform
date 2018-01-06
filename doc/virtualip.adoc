@@ -1,0 +1,12 @@
+= Virtual IP
+
+A virtual IP address (VIP or VIPA) is an IP address that doesn't correspond to an actual physical network interface.
+
+== Active / Passive Failover
+
+- Heartbeat
+- Keepalived
+
+== Questions
+
+- How does such a setting behave in a split brain scenario?

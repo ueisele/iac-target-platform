@@ -22,15 +22,21 @@
 - name: Ensure authkeys for heartbeat are set
   template: src=authkeys.j2 dest=/etc/ha.d/authkeys mode=0600
 
-- name: Ensure that Systemd service is always restarted
-  lineinfile:
+- stat:
     path: /lib/systemd/system/heartbeat.service
-    regexp: '^Restart='
-    line: 'Restart=always'
-
-- name: Ensure Heartbeat is Enabled and Started
+  register: heartbeat_service
+- name: Ensure Heartbeat Service is Disabled
   systemd:
     name: heartbeat
-    enabled: yes
+    enabled: no
+  when: heartbeat_service.stat.exists  
+
+- name: Ensure Heartbeat is Registered as Systemd Service
+  copy: src="{{ role_path }}/files/heartbeat.service" dest=/lib/systemd/system/heartbeat.service backup=yes
+
+- name: Ensure Heartbeat Service is Started and Enabled
+  systemd:
     daemon_reload: yes
+    name: heartbeat
+    enabled: yes
     state: restarted

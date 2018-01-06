@@ -1,0 +1,9 @@
+= Data Center Network
+
+Virtual nodes need to communicate witch each other. Therefore some virtual network infrastructure is required.
+
+== SDN
+
+== Other Solutions
+
+- Calico: https://www.projectcalico.org/learn/

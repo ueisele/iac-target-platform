@@ -20,19 +20,22 @@
     dest: /usr/local/bin/traefik
     state: link
 
-- name: Add Traefik User
-  user:
-    name: traefik
-    createhome: no
-
-- name: Create Traefik Configuration Directory
-  file:
-    path: /etc/traefik
+- name: Create Temporary Directory for Configuration
+  tempfile:
     state: directory
-    mode: 0755
+    prefix: traefik
+  register: traefik_tmp_dir  
 
 - name: Traefik Configuration File
-  template: src=traefik.toml.j2 dest=/etc/traefik/traefik.toml
+  template: src=traefik.toml.j2 dest={{ traefik_tmp_dir.path }}/traefik.toml
+
+- name: Ensure Traefik configuration is stored in Consul
+  command: chdir={{ traefik_tmp_dir.path }} /usr/local/bin/traefik storeconfig --consul --consul.endpoint=127.0.0.1:8500 {{ traefik_tmp_dir.path }}/traefik.toml
+  register: task_result
+  until: task_result.rc == 0
+  retries: 5
+  delay: 5
+  run_once: true
 
 - name: Systemd Script for Traefik
   template: src=traefik.service.j2 dest=/lib/systemd/system/traefik.service

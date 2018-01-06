@@ -15,4 +15,8 @@
 
 - name: Install the package "vim"
   apt:
-    name: vim    
+    name: vim
+
+- name: Install the package "curl"
+  apt:
+    name: curl

@@ -13,7 +13,7 @@ defaultEntryPoints = ["http"]
 [retry]
 
 [healthcheck]
-interval = "30s"
+interval = "15s"
 
 ################################################################
 # Web configuration backend
@@ -42,3 +42,26 @@ endpoint = "127.0.0.1:8500"
 domain = "{{ public_domain }}"
 prefix = "traefik"
 exposedByDefault = false
+watch = true
+
+################################################################
+# Static configuration backend
+################################################################
+
+[file]
+
+[backends]
+  [backends.backend-traefik]
+    [backends.backend-traefik.servers.{{ inventory_hostname }}]
+    url = "http://{{ inventory_hostname }}:8080"
+    [backends.backend-traefik.healthcheck]
+    path = "/ping"
+    interval = "10s"
+    port = 8080
+
+[frontends]
+  [frontends.frontend-traefik]
+  backend = "backend-traefik"
+  passHostHeader = true
+    [frontends.frontend-traefik.routes.route-host-traefik]
+    rule = "Host:traefik.{{ public_domain }}"

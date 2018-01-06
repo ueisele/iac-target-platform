@@ -1,3 +1,5 @@
+# {{ansible_managed}}
+
 #
 #       There are lots of options in this file.  All you have to have is a set
 #       of nodes listed {"node ...} one of {serial, bcast, mcast, or ucast},
@@ -47,7 +49,7 @@ warntime 5
 #       we have a separate dead time for when things first come up.
 #       It should be at least twice the normal dead time.
 #
-initdead 120
+initdead 30
 
 #       What UDP port to use for bcast/ucast communication?
 #

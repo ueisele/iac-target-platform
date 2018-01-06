@@ -2,7 +2,6 @@
 - name: Resolve Host Ip
   command: "hostname -i"
   register: hostname_command_output
-
 - set_fact:
     consul_bind_ip: "{{ hostname_command_output.stdout }}"
 
