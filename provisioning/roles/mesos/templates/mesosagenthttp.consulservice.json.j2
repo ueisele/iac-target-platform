@@ -1,0 +1,17 @@
+{
+	"service": {
+		"name": "mesos-agent-http",
+		"tags": ["traefik.enable=true"],
+		"port": {{ mesos_agent_port }}
+	},
+	"check": {
+		"id": "mesos-agent-http",
+		"name": "Mesos Agent Http Status",
+		"service_id": "mesos-agent-http",
+		"http": "http://127.0.0.1:{{ mesos_agent_port }}/health",
+		"tls_skip_verify": false,
+		"method": "GET",
+		"interval": "10s",
+        "timeout": "3s"
+	  }
+}

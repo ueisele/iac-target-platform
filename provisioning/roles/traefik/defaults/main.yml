@@ -1,4 +1,4 @@
 ---
-traefik_version: "1.5.0-rc4"
-traefik_checksum: "sha256:115e9dd4d76d1d63ba4fa65325e7e6df8f9bf85a77c1885e186060359fdf3c55"
+traefik_version: "1.5.2"
+traefik_checksum: "8232fb9597cf153d3d305540e13ba7a7850148e5e04304cf56a73c0b21e29c8d"
 traefik_package_url: "https://github.com/containous/traefik/releases/download/v{{ traefik_version }}/traefik_linux-amd64"

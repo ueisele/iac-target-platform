@@ -1,6 +1,6 @@
 ---
-consul_version: "1.0.2"
-consul_checksum: "sha256:418329f0f4fc3f18ef08674537b576e57df3f3026f258794b4b4b611beae6c9b"
+consul_version: "1.0.6"
+consul_checksum: "sha256:bcc504f658cef2944d1cd703eda90045e084a15752d23c038400cf98c716ea01"
 consul_package_url: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
 
 consul_server_hosts:

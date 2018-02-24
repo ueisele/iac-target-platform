@@ -1,0 +1,7 @@
+---
+is_mesos_master: "{{ (mesos_master_hosts | intersect(inventory_hostname)) == [inventory_hostname] }}"
+
+mesos_master_systemd_enabled: "{% if is_mesos_master %}yes{% else %}no{% endif %}"
+mesos_master_systemd_state: "{% if is_mesos_master %}started{% else %}stopped{% endif %}"
+mesos_agent_systemd_enabled: "{% if is_mesos_master %}no{% else %}yes{% endif %}"
+mesos_agent_systemd_state: "{% if is_mesos_master %}stopped{% else %}started{% endif %}"

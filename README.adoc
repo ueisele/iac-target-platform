@@ -29,7 +29,7 @@ This repository provides a Vagrant configuration that sets up a HA development p
 
 . Access the Consul UI (with activated hostname resolution from host)
 
-    http://consului.public.platform.dev/
+    http://consul-http.public.platform.dev/
 
 . Access the Consul UI (with disabled hostname resolution from host)
 

@@ -4,21 +4,26 @@ domainname = ENV['DOMAIN_NAME']
 publiclb_ip = ENV['PUBLICLB_IP']
 
 cluster = {
-  "discovery1" => { :ip => "192.168.17.20", :cpus => 2, :mem => 2048 },
-  "discovery2" => { :ip => "192.168.17.21", :cpus => 2, :mem => 2048 },
-  "discovery3" => { :ip => "192.168.17.22", :cpus => 2, :mem => 2048 },
+  "discovery1" => { :ip => "192.168.17.20", :cpus => 2, :mem => 4092 },
+  "discovery2" => { :ip => "192.168.17.21", :cpus => 2, :mem => 4092 },
+  "discovery3" => { :ip => "192.168.17.22", :cpus => 2, :mem => 4092 },
   "lb1" => { :ip => "192.168.17.11", :cpus => 2, :mem => 2048 },
   "lb2" => { :ip => "192.168.17.12", :cpus => 2, :mem => 2048 },
-  "worker1"    => { :ip => "192.168.17.100", :cpus => 4, :mem => 6144 },
-  "worker2"    => { :ip => "192.168.17.101", :cpus => 4, :mem => 6144 }
+  "worker1"    => { :ip => "192.168.17.100", :cpus => 4, :mem => 8192 },
+  "worker2"    => { :ip => "192.168.17.101", :cpus => 4, :mem => 8192 },
+  "worker3"    => { :ip => "192.168.17.101", :cpus => 4, :mem => 8192 },
+  "worker4"    => { :ip => "192.168.17.101", :cpus => 4, :mem => 8192 }
 }
 
 groups = {
-  "zookeeper" => ["discovery1", "discovery2", "discovery3"],
   "consul-server" => ["discovery1", "discovery2", "discovery3"],
-  "consul-agent" => ["lb1", "lb2", "worker1", "worker2"],
+  "consul-agent" => ["lb1", "lb2", "worker1", "worker2", "worker3", "worker4"],
+  "consul:children" => ["consul-server", "consul-agent"],
   "public-lb" => ["lb1", "lb2"],
-  "public-dns" => ["lb1", "lb2"]
+  "zookeeper" => ["discovery1", "discovery2", "discovery3"],
+  "mesos-master" => ["discovery1", "discovery2", "discovery3"],
+  "mesos-agent" => ["worker1", "worker2", "worker3", "worker4"],
+  "mesos:children" => ["mesos-master", "mesos-agent"]
 }
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|

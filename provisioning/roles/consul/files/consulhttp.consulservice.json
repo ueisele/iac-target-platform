@@ -1,14 +1,14 @@
 {
 	"service": {
-		"name": "consului",
+		"name": "consul-http",
 		"tags": ["traefik.enable=true"],
 		"port": 8500
 	},
 	"check": {
-		"id": "consului",
-		"name": "Consul Ui Status",
-		"service_id": "consului",
-		"http": "http://127.0.0.1:8500/ui/",
+		"id": "consul-http",
+		"name": "Consul Http Status",
+		"service_id": "consul-http",
+		"http": "http://127.0.0.1:8500/v1/status/leader",
 		"tls_skip_verify": false,
 		"method": "GET",
 		"interval": "10s",

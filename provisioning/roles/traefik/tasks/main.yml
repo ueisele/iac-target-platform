@@ -47,5 +47,5 @@
     state: restarted
 
 - name: Ensure Traefik is registerd as Consul service
-  copy: src="{{ role_path }}/files/traefik.consulservice.json" dest=/etc/consul.d/traefik.consulservice.json
+  copy: src="{{ role_path }}/files/traefikhttp.consulservice.json" dest=/etc/consul.d/traefikhttp.consulservice.json
   notify: restart consul agent

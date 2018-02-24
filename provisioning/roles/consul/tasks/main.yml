@@ -44,8 +44,8 @@
     state: directory
     mode: 0755
 
-- name: Ensure Consul Web UI Service is registerd
-  copy: src="{{ role_path }}/files/consului.consulservice.json" dest=/etc/consul.d/consului.consulservice.json
+- name: Ensure Consul Http Service is registerd
+  copy: src="{{ role_path }}/files/consulhttp.consulservice.json" dest=/etc/consul.d/consulhttp.consulservice.json
   when: consul_server == true  
 
 - name: Consul Server Configuration File

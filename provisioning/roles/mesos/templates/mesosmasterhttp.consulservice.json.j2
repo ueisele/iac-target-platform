@@ -1,0 +1,17 @@
+{
+	"service": {
+		"name": "mesos-master-http",
+		"tags": ["traefik.enable=true"],
+		"port": {{ mesos_master_port }}
+	},
+	"check": {
+		"id": "mesos-master-http",
+		"name": "Mesos Master Http Status",
+		"service_id": "mesos-master-http",
+		"http": "http://127.0.0.1:{{ mesos_master_port }}/health",
+		"tls_skip_verify": false,
+		"method": "GET",
+		"interval": "10s",
+        "timeout": "3s"
+	  }
+}

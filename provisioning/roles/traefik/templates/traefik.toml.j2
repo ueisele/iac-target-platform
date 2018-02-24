@@ -64,4 +64,4 @@ watch = true
   backend = "backend-traefik"
   passHostHeader = true
     [frontends.frontend-traefik.routes.route-host-traefik]
-    rule = "Host:traefik.{{ public_domain }}"
+    rule = "Host:traefik-http.{{ public_domain }}"
