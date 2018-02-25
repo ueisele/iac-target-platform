@@ -57,6 +57,7 @@
     - role: AnsibleShipyard.ansible-zookeeper
       zookeeper_version: "3.4.11"
       zookeeper_hosts: "{{ groups['zookeeper'] }}"
+      tick_time: 4000
 
 - name: Mesos Setup
   hosts: mesos
