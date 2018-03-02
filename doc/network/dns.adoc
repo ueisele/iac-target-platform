@@ -1,0 +1,6 @@
+= DNS
+
+== Documentation
+
+* https://linuxacademy.com/community/posts/show/topic/3338-domain-vs-search-in-resolvconf
+* https://stackoverflow.com/questions/39277449/resolvconf-does-not-add-search-domains-to-queries-with-dots
