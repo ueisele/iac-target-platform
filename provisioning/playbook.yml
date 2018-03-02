@@ -12,7 +12,7 @@
     - role: resolvconf
       config_resolvconf:
         - "domain {{ domainname }}"
-        - "search {{ domainname }}"
+        - "search {{ domainname }} service.consul"
 
 - name: Java Setup
   hosts: all

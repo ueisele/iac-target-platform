@@ -1,0 +1,49 @@
+= Troubleshooting
+
+This section describes some typical tasks that may help you if anything does not work as expected, for example the UI does not outline three Mesos agent, or the UI is not available at all.
+
+A starting point are always the Apache Mesos ans Zookeeper log messages. The logs are provided via `journald` and can be read with a Ansible ad hoc command.
+
+[source,bash]
+----
+ansible discovery1 -i .vagrant/provisioners/ansible/inventory --become -m command -a 'journalctl -u zookeeper'
+ansible discovery1 -i .vagrant/provisioners/ansible/inventory --become -m command -a 'journalctl -u mesos-master'
+ansible worker1 -i .vagrant/provisioners/ansible/inventory --become -m command -a 'journalctl -u mesos-agent'
+----
+
+If you want a continous stream, you have to login to the guest node.
+
+[source,bash]
+----
+vagrant ssh discovery1
+ubuntu@discovery1:~$ journalctl -u mesos-master -f
+----
+
+== Typical Errors
+
+=== Apache Mesos restarts every minute
+If Apache Mesos restarts continously, shutdown all Mesos masters and agents, and delete the work directory, as well as the Zookeeper entry.
+
+[source,bash]
+----
+ansible mesos-agent -i .vagrant/provisioners/ansible/inventory --become -m command -a 'systemctl stop mesos-slave'
+ansible mesos-master -i .vagrant/provisioners/ansible/inventory --become -m command -a 'systemctl stop mesos-master'
+ansible mesos -i .vagrant/provisioners/ansible/inventory -f 6 --become -m file -a 'path=/var/lib/mesos state=absent'
+ansible discovery1 -i .vagrant/provisioners/ansible/inventory -m command -a '/opt/zookeeper-3.4.9/bin/zkCli.sh -server discovery1 rmr /mesos/'
+ansible discovery1 -i .vagrant/provisioners/ansible/inventory -m command -a '/opt/zookeeper-3.4.9/bin/zkCli.sh -server discovery1 rmr /mesos'
+----
+
+Now, the Apache Mesos masters and agents can be started again.
+
+[source,bash]
+----
+ansible mesos-master -i .vagrant/provisioners/ansible/inventory --become -m command -a 'systemctl start mesos-master'
+ansible mesos-agent -i .vagrant/provisioners/ansible/inventory --become -m command -a 'systemctl start mesos-slave'
+----
+
+=== Execution of a Framework Hangs
+
+Execution of framework blocks at `No credentials provided. Attempting to register without authentication`.
+
+* Try to set environment variable `LIBPROCESS_IP` to the address of the interface that listens to responses. In this example this is the VirtualBox interface of the private network.
+* Set a Firewall rule that allowes incoming TCP traffic from the interface that corresponds to the Address specified at `LIBPROCESS_IP`.

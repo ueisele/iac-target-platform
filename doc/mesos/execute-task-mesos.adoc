@@ -1,0 +1,12 @@
+= Work with Apache Mesos
+
+Mesos provides a HTTP API (application/json and application/x-protobuf), as well as APIs for several languages (see http://mesos.apache.org/documentation/latest/ at section `APIs`).
+
+A task can only be executed on Mesos, if a corresponding framework has been registerd at Mesos. For example in order to execute a shell command as a task, the `Marathon` framework can be registerd.
+
+[NOTE]
+====
+To register a framework the request must be directed to the Mesos leader. 
+This can easily be achived by sending a request to any Mesos master at the path `redirect`.
+For example a request to http://discovery1:5050/redirect is automatically redirected to the leader e.g. http://discovery2:5050/
+====

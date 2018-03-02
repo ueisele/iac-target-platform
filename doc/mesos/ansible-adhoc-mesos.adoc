@@ -1,0 +1,48 @@
+= Install Apache Mesos with Ansible Ad Hoc Commands
+
+This is the manual approach to install Apache Mesos on this Vagrant cluster.
+By default, the machines are automatcally provisioned with the provided Ansible roles `mesos-master` and `mesos-slave`. 
+
+=== Install Apache Mesos Debian Package
+
+Mesosphere provides pre build Mesos packages for several distributions. The available packages are listed at https://open.mesosphere.com/downloads/mesos/.
+Alternatively, Mesosphere alsp provides package repositories (see https://mesosphere.com/blog/mesosphere-package-repositories/).
+
+The Mesosphere packages also define the required dependecies. Therefore, ensure that the required dependecies are also installed. This, for example, can be achived with 'apt' on Debian based distributions.
+In this Cluster Debian Strech is used as distribution. Mesosphere does only provide a package for Debian Jessie, which can also be used for Debian Stretch.
+Unfortunately, it does not work out of the box. Apache Mesos requires `libssl1.0.0`, which is no longer part of Debian Stretch. It has been removed in favour of `libssl1.0.2`.
+Therefore, to be able to run Apache Mesos on Debian Stretch the old `libssl1.0.0` must be installed first.
+Hopefully, Apache Mesos moves to the new version at its next release.
+
+.Install libssl1.0.0 on all Debian Stretch Guest Systems
+[source,bash]
+----
+ansible mesos -i .vagrant/provisioners/ansible/inventory -f 6 --become -m apt -a 'deb=http://ftp.de.debian.org/debian/pool/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u6_amd64.deb'
+----
+
+.Install Apache Mesos Debian Package on all Guest Systems'
+[source,bash]
+----
+ansible mesos -i .vagrant/provisioners/ansible/inventory -f 6 --become -m apt -a 'deb=http://repos.mesosphere.com/debian/pool/main/m/mesos/mesos_1.4.0-2.0.1.debian8_amd64.deb'
+----
+
+=== Configure Mesos 
+[source,bash]
+----
+ansible mesos -i .vagrant/provisioners/ansible/inventory -f 6 --become -m command -a 'bash -c "echo zk://discovery1:2181,discovery2:2181,discovery3:2181/mesos > /etc/mesos/zk"'
+ansible mesos-master -i .vagrant/provisioners/ansible/inventory --become -m command -a 'bash -c "echo 2 > /etc/mesos-master/quorum"'
+----
+
+=== Enable and Start Mesos Master Systemd Service 
+[source,bash]
+----
+ansible mesos-master -i .vagrant/provisioners/ansible/inventory --become -m command -a 'systemctl enable mesos-master.service'
+ansible mesos-master -i .vagrant/provisioners/ansible/inventory -f 1 --become -m command -a 'systemctl start mesos-master.service'
+----
+
+=== Enable and Start Mesos Agent Systemd Service 
+[source,bash]
+----
+ansible mesos-agent -i .vagrant/provisioners/ansible/inventory --become -m command -a 'systemctl enable mesos-slave.service'
+ansible mesos-agent -i .vagrant/provisioners/ansible/inventory -f 1 --become -m command -a 'systemctl start mesos-slave.service'
+----

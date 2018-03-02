@@ -1,0 +1,141 @@
+= Build and Install Apache Mesos from Source
+
+The Apache Mesos project itself does only provide the sources. In order to use it, it is required to build it from source.
+As an alternative the pre-build packages from Mesosphere can be used (see https://open.mesosphere.com/downloads/mesos/ and https://mesosphere.com/blog/mesosphere-package-repositories/).
+
+However, if you want use Apache Mesos on another distribution, it is necessary to build it from source. Especially for Windows this is the only possible solution.
+Another reason, why one could build Apache Mesos from Source are the provided testing frameworks. These frameworks provide an easy way to try the functionality of Apache Mesos, and a good start to learn how to develop Mesos Frameworks.
+
+Fortunately, the Apache Mesos website provides a detailed build manual for several distributions, as well as for Windows (see http://mesos.apache.org/getting-started/ and http://mesos.apache.org/documentation/latest/building/).
+
+== Prerequisites
+The common prerequisites are listed on the Apache Mesos website.
+
+Basically, to run Apache Mesos a *64 Bit Linux* with Kernel >= 3.10 or a *64 Bit Mac OS X* is required.
+
+It is also important, that all *hostnames are resolvable via DNS or via `/etc/hosts`*. 
+Additionally, take care that realy each host *resolves its own hostname to its public address* and not to 127.0.0.1.
+
+To Build Apache Mesos *GCC 4.8.1+* or *Clang 3.5+* is required.
+
+Dependet on the used Linux distribution, additional packages must be installed.
+
+.Ubuntu 16.04 (same as requirements from website except for libz-dev)
+[source,bash]
+----
+# Install a few utility tools.
+$ sudo apt-get install -y tar wget
+
+# Install the latest OpenJDK.
+$ sudo apt-get install -y openjdk-8-jdk
+
+# Install autotools (Only necessary if building from git repository).
+$ sudo apt-get install -y autoconf automake libtool
+
+# Install other Mesos dependencies.
+$ sudo apt-get -y install build-essential python-dev python-virtualenv libcurl4-nss-dev libsasl2-dev libsasl2-modules libapr1-dev libsvn-dev zlib1g-dev libz-dev
+----
+
+.Debian Stretch
+[source,bash]
+----
+TODO
+----
+
+.Arch Linux
+[source,bash]
+----
+TODO
+----
+
+== Building Mesos (Posix)
+
+[source,bash]
+----
+# Clone Apache Mesos repository
+git clone https://github.com/apache/mesos.git
+
+# Change working directory and checkout the version to build (e.g. 1.4.0 or stay on master for bleeding edge).
+$ cd mesos
+$ checkout 1.4.0
+
+# Bootstrap (Only required if building from git repository).
+$ ./bootstrap
+
+# Configure and build.
+$ mkdir build
+$ cd build
+$ ../configure
+$ make -j <number of cores>
+
+# Run test suite (and build example frameworks).
+$ make check
+----
+
+If two or three tests fail, dont worry. So far, always about 3 tests failed. I actually dont't know the reason, but it was not a problem until now.
+
+== Run Test Frameworks
+The Apache Mesos sources are bundled with some example frameworks written in C++, Java and Python. 
+These frameworks assume that the Mesos master and agent runs on your local machine.
+
+[source,bash]
+----
+# Change into build directory.
+$ cd build
+
+# Create work directory
+$ mkdir work
+
+# Start Mesos master
+$ ./bin/mesos-master.sh --ip=127.0.0.1 --work_dir=./work
+
+# Start Mesos agent (without systemd support)
+$ ./bin/mesos-agent.sh --master=127.0.0.1:5050 --work_dir=./work --no-systemd_enable_support --executor_environment_variables='{"LD_LIBRARY_PATH": "<absolute path to mesos build dir>/src/.libs"}'
+(e.g ./bin/mesos-agent.sh --master=127.0.0.1:5050 --work_dir=./work --no-systemd_enable_support --executor_environment_variables='{"LD_LIBRARY_PATH": "/home/ue/Repository/alien/cloud-technologies/mesos/mesos/mesos-1.4.0/build/src/.libs/"}')
+
+# Visit the Mesos web page.
+$ http://127.0.0.1:5050
+
+# Run Java framework (exits after successfully running some tasks).
+$ ./src/examples/java/test-framework 127.0.0.1:5050
+
+# Run Python framework (exits after successfully running some tasks).
+$ ./src/examples/python/test-framework 127.0.0.1:5050
+
+# Run C++ framework (exits after successfully running some tasks).
+$ ./src/test-framework --master=127.0.0.1:5050
+----
+
+The C++ test Framework requires `libmesos-x.x.x.so` as shared library. This is the reason, why the Mesos agent is started with the executor environment variable `LD_LIBRARY_PATH` set.
+
+Unfortunately, this may not work in Ubuntu based distributions, because Ubuntu does only allow global shared variables. 
+Like it or not, but in order to get the C++ Framework work in Ubuntu the `libmesos-x.x.x.so` library must be registred.
+If you want to install Apache Mesos on your system, you can skip the following steps and proceed with the installation of Apache Mesos.
+After that step, the C++ Framework also works.
+
+.Register Mesos shared libraries in Ubuntu
+[source,bash]
+----
+echo <Path To Mesos Build Dir>src/.libs > /etc/ld.so.conf.d/mesos.conf
+sudo ldconfig
+----
+
+After the tests has been executed the libraries can be unregistred.
+
+.Unregister Mesos shared libraries in Ubuntu
+[source,bash]
+----
+sudo rm /etc/ld.so.conf.d/mesos.conf
+sudo ldconfig
+----
+
+== Install Apache Mesos
+
+[source,bash]
+----
+# Change into build directory.
+$ cd build
+
+# Install (Optional).
+$ make install
+----

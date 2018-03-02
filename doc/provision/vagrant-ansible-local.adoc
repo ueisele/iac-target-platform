@@ -1,0 +1,14 @@
+= Vagrant Ansible Local Provisioner
+
+https://www.vagrantup.com/docs/provisioning/ansible_local.html
+
+[source,bash]
+----
+cfg.vm.provision :ansible_local do |ansible|
+    ansible.install_mode = "pip"
+    ansible.version = "latest"
+    ansible.groups = groups
+    ansible.galaxy_role_file = 'requirements.yml'
+    ansible.playbook = "provisioning/playbook.yml"
+end # end provision
+----    
