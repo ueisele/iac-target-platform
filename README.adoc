@@ -129,13 +129,20 @@ https://open.mesosphere.com/downloads/mesos/
 
 ==== Endpoints
 
-* Apache Mesos UI
+* Apache Mesos Master
 - http://mesos-master-http.public.platform.dev/
 - http://mesos-master-http.service.consul:5050/
 - http://discovery1.platform.dev:5050/
 - http://192.168.17.20:5050/
 
+* Apache Mesos Agent
+- http://mesos-agent-http.service.consul:5051/
+- http://worker[1-4].platform.dev:5051/
+- http://192.168.17.10[0-3]:5051/
+
 ==== Documentation
+
+* Endpoints: http://mesos.apache.org/documentation/latest/endpoints/
 
 * link:doc/mesos/build-mesos.adoc[Build and Install Apache Mesos form Source]
 * link:doc/mesos/ansible-adhoc-mesos.adoc[Install Apache Mesos with Ansible Ad Hoc Commands]

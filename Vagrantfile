@@ -50,7 +50,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     
   end # end cluster
 
-  #config.vm.provision :shell, inline: "sed -i \"/^127.0.0.1\\t$(hostname -f)/d\" /etc/hosts"
   config.vm.provision :shell, inline: "bash -c \"echo 127.0.0.1\tlocalhost > /etc/hosts\""
   config.vm.provision :shell, inline: "bash -c \"echo $(hostname -i)\t$(hostname -f) $(hostname) >> /etc/hosts\""
   
