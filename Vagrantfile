@@ -54,6 +54,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell, inline: "bash -c \"echo $(hostname -i)\t$(hostname -f) $(hostname) >> /etc/hosts\""
   
   config.vm.provision :ansible do |ansible|
+    ansible.galaxy_command = 'ansible-galaxy install --role-file=%{role_file} --roles-path=%{roles_path}'
     ansible.galaxy_role_file = 'requirements.yml'
     ansible.galaxy_roles_path = 'provisioning/roles-galaxy'
     ansible.groups = groups   
