@@ -1,0 +1,14 @@
+# {{ansible_managed}}
+
+[Unit]
+Description=Marathon
+After=network.target
+Wants=network.target
+
+[Service]
+ExecStart={{ marathon_path_bin }}/marathon --master {{ mesos_master }} --zk {{ marathon_zk }} {% for key, value in marathon_extra_options_actual.iteritems() %}--{{ key }} {{ value }} {% endfor %} 
+Restart=always
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target

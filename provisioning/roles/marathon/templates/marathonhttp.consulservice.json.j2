@@ -1,0 +1,17 @@
+{
+	"service": {
+		"name": "marathon-http",
+		"tags": ["traefik.enable=true"],
+		"port": {{ marathon_http_port }}
+	},
+	"check": {
+		"id": "marathon-http",
+		"name": "Marathon Http Status",
+		"service_id": "marathon-http",
+		"http": "http://127.0.0.1:{{ marathon_http_port }}/ping",
+		"tls_skip_verify": false,
+		"method": "GET",
+		"interval": "10s",
+        "timeout": "3s"
+	  }
+}

@@ -125,11 +125,13 @@ Apache Mesos is a plain resource scheduler. Mesos itself does not support the ex
 This is only possible with specific Mesos frameworks, for example 'Marathon' which supports the execution of shell commands or Docker containers.
 ====
 
+https://open.mesosphere.com/downloads/mesos/
+
 ==== Endpoints
 
 * Apache Mesos UI
-- http://mesos-http.public.platform.dev/
-- http://mesos-http.service.consul:5050/
+- http://mesos-master-http.public.platform.dev/
+- http://mesos-master-http.service.consul:5050/
 - http://discovery1.platform.dev:5050/
 - http://192.168.17.20:5050/
 
@@ -139,6 +141,22 @@ This is only possible with specific Mesos frameworks, for example 'Marathon' whi
 * link:doc/mesos/ansible-adhoc-mesos.adoc[Install Apache Mesos with Ansible Ad Hoc Commands]
 * link:doc/mesos/execute-task-mesos.adoc[Work with Apache Mesos]
 * link:doc/mesos/troubleshooting-mesos.adoc[Throubleshooting]
+
+=== Marathon
+
+==== Endpoints
+
+* Marathon UI
+- http://marathon-http.public.platform.dev/
+- http://marathon-http.service.consul:8080/
+- http://discovery1.platform.dev:8080/
+- http://192.168.17.20:8080/
+
+==== Documentation
+
+* Docs: https://mesosphere.github.io/marathon/docs/
+* Commandline Flags: https://mesosphere.github.io/marathon/docs/command-line-flags.html
+* API: https://mesosphere.github.io/marathon/api-console/index.html
 
 == Prospect
 

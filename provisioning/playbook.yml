@@ -72,3 +72,15 @@
         cluster: "mesos.{{ domainname }}"
       mesos_agent_options_additional:
         isolation: "cgroups/cpu,cgroups/mem"
+
+- name: Marathon Setup
+  hosts: mesos-master
+  become: yes
+  roles:
+    - role: marathon
+      mesos_version: "1.5.5"
+      mesos_checksum: "sha256:fe5400507092909661a71365f5a36dec2fa12ee2a6f92e248b5a074a9566973c"
+      zookeeper_hosts: "{{ groups['zookeeper'] }}"
+      marathon_extra_options:
+        framework_name: "marathon"
+        

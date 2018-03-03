@@ -1,6 +1,6 @@
 ---
 mesos_version: "1.5.0"
-mesos_checksum: "c7e265f920998142d716c0afd442eb7276f66b24225afbf0248e33e39c79b956"
+mesos_checksum: "sha256:c7e265f920998142d716c0afd442eb7276f66b24225afbf0248e33e39c79b956"
 mesos_package_url: "http://repos.mesosphere.com/debian/pool/main/m/mesos/mesos_{{ mesos_version }}-2.0.1.debian9_amd64.deb"
 
 zookeeper_hosts:

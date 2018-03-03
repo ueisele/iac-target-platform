@@ -1,0 +1,25 @@
+---
+marathon_version: "1.5.5"
+marathon_checksum: "sha256:fe5400507092909661a71365f5a36dec2fa12ee2a6f92e248b5a074a9566973c"
+marathon_package_url: "https://downloads.mesosphere.com/marathon/releases/{{ marathon_version }}/marathon-{{ marathon_version }}.tgz"
+marathon_path_base: "/opt"
+marathon_path_root: "{{ marathon_path_base }}/marathon"
+marathon_path_bin: "{{ marathon_path_root }}/bin"
+
+zookeeper_hosts:
+  - localhost
+
+mesos_master: "zk://{% for host in zookeeper_hosts %}{% if loop.index > 1 %},{% endif %}{{host}}:2181{% endfor %}/mesos"
+marathon_zk: "zk://{% for host in zookeeper_hosts %}{% if loop.index > 1 %},{% endif %}{{host}}:2181{% endfor %}/marathon"
+
+marathon_http_port: 8080
+
+marathon_extra_options_default:
+  http_port: "{{ marathon_http_port }}"
+  enable_features: "vips,task_killing,external_volumes"
+  task_launch_timeout: 600000
+  default_network_name: "marathon"
+
+marathon_extra_options: {}
+
+marathon_extra_options_actual: "{{ marathon_extra_options_default | combine(marathon_extra_options) }}"

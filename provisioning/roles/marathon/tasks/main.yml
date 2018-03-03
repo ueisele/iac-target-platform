@@ -1,0 +1,46 @@
+---
+- name: Create temporary install directory
+  tempfile:
+    state: directory
+    suffix: marathon-install
+  register: tempdir  
+
+- name: Download Marathon and Check
+  get_url:
+    url: "{{ marathon_package_url }}"
+    dest: "{{ tempdir.path }}"
+    checksum: "{{ marathon_checksum }}"
+    timeout: 100
+  register: package  
+  until: package|succeeded
+  retries: 5 
+
+- name: Install Marathon
+  unarchive:
+    src: "{{ package.dest }}"
+    dest: "{{ marathon_path_base }}"
+    remote_src: yes
+
+- name: Create Symlink to Marathon
+  file:
+    src: "{{ marathon_path_base }}/marathon-{{ marathon_version }}"
+    dest: "{{ marathon_path_root }}"
+    state: link
+
+- name: Ensure Marathon is Executable
+  file:
+    path: "{{ marathon_path_bin }}/marathon"
+    mode: 0755
+
+- name: Systemd Script for Marathon
+  template: src=marathon.service.j2 dest=/lib/systemd/system/marathon.service
+
+- name: Marathon Enabled and Started
+  systemd:
+    name: marathon
+    enabled: yes
+    state: restarted
+
+- name: Ensure Marathon Http is registerd as Consul service
+  template: src=marathonhttp.consulservice.json.j2 dest=/etc/consul.d/marathonhttp.consulservice.json
+  notify: restart consul agent
