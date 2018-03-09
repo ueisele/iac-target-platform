@@ -12,7 +12,7 @@ function ansible_galaxy_install_roles () {
 }
 
 function ansible_playbook () {
-    ansible-playbook -i ${CWD_VAGRANT}/.vagrant/provisioners/ansible/inventory -e domainname=${DOMAIN_NAME} -e publiclb_ip=${PUBLICLB_IP} "$@"
+    ansible-playbook -i ${CWD_VAGRANT}/.vagrant/provisioners/ansible/inventory -e domainname=${PLATFORM_DOMAIN} -e publiclb_ip=${PLATFORM_PUBLICLBIP} "$@"
 }
 
 if [ "${BASH_SOURCE[0]}" == "$0" ]; then

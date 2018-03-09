@@ -1,5 +1,26 @@
 #!/usr/bin/env bash
 set -e
+pushd . > /dev/null
+cd $(dirname ${BASH_SOURCE[0]})
+CWD_ROOT=`pwd`
+export CONFIG_FILE="${CWD_ROOT}/platform.yml"
+popd > /dev/null
 
-export DOMAIN_NAME="platform.dev"
-export PUBLICLB_IP="192.168.17.10"
+function parse_yaml {
+   local prefix=$2
+   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+   sed -ne "s|^\($s\):|\1|" \
+        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
+        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
+   awk -F$fs '{
+      indent = length($1)/2;
+      vname[indent] = $2;
+      for (i in vname) {if (i > indent) {delete vname[i]}}
+      if (length($3) > 0) {
+         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+         printf("%s%s%s=\"%s\"\n", "'$prefix'", toupper(vn), toupper($2), $3);
+      }
+   }'
+}
+
+eval $(parse_yaml ${CONFIG_FILE} "PLATFORM_")

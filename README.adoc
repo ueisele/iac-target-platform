@@ -81,10 +81,10 @@ The Consul domain is `consul`.
 - http://consul-http.public.platform.dev/ui/
 - http://consul-http.service.consul:8500/ui/
 - http://discovery1.platform.dev:8500/ui/
-- http://192.168.17.20:8500/ui/
+- http://192.168.17.21:8500/ui/
 * Consul DNS
 - discovery1.platform.dev:8600
-- 192.168.17.20:8600
+- 192.168.17.21:8600
 
 ==== Documentation
 
@@ -126,6 +126,7 @@ This is only possible with specific Mesos frameworks, for example 'Marathon' whi
 ====
 
 https://open.mesosphere.com/downloads/mesos/
+https://github.com/ueisele/mesos-deb-packaging
 
 ==== Endpoints
 
@@ -133,7 +134,7 @@ https://open.mesosphere.com/downloads/mesos/
 - http://mesos-master-http.public.platform.dev/
 - http://mesos-master-http.service.consul:5050/
 - http://discovery1.platform.dev:5050/
-- http://192.168.17.20:5050/
+- http://192.168.17.21:5050/
 
 * Apache Mesos Agent
 - http://mesos-agent-http.service.consul:5051/
@@ -157,7 +158,7 @@ https://open.mesosphere.com/downloads/mesos/
 - http://marathon-http.public.platform.dev/
 - http://marathon-http.service.consul:8080/
 - http://discovery1.platform.dev:8080/
-- http://192.168.17.20:8080/
+- http://192.168.17.21:8080/
 
 ==== Documentation
 

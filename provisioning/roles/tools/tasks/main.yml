@@ -5,6 +5,13 @@
     regexp: '^export PATH=\$PATH:/sbin$'
     line: 'export PATH=$PATH:/sbin'
 
+- name: Upgrade distribution
+  apt:
+    upgrade: dist
+    update_cache: yes
+    autoremove: yes
+    autoclean: yes
+
 - name: Install the package "net-tools"
   apt:
     name: net-tools

@@ -1,0 +1,74 @@
+---
+domain: "platform.dev"
+publiclbip: "192.168.17.10"
+
+vm:
+  box: "debian/contrib-stretch64"
+  ostype: "Debian_64"
+
+hosts:
+  discovery1:
+    ip: "192.168.17.21"
+    cpus: 2
+    mem: 4092
+  discovery2:
+    ip: "192.168.17.22"
+    cpus: 2
+    mem: 4092
+  discovery3:
+    ip: "192.168.17.23"
+    cpus: 2
+    mem: 4092    
+  lb1:
+    ip: "192.168.17.11"
+    cpus: 2
+    mem: 2048
+  lb2:
+    ip: "192.168.17.12"
+    cpus: 2
+    mem: 2048
+  worker1:
+    ip: "192.168.17.101"
+    cpus: 4
+    mem: 8192    
+  worker2:
+    ip: "192.168.17.102"
+    cpus: 4
+    mem: 8192    
+  worker3:
+    ip: "192.168.17.103"
+    cpus: 4
+    mem: 8192    
+  worker4:
+    ip: "192.168.17.104"
+    cpus: 4
+    mem: 8192        
+    
+groups:
+  discovery:
+    - discovery[1:3]
+  lb:
+    - lb[1:2]
+  worker:
+    - worker[1:4]      
+  consul-server:children:
+    - discovery
+  consul-agent:children:
+    - lb
+    - worker
+  consul:children:
+    - consul-server
+    - consul-agent
+  public-lb:children:
+    - lb      
+  zookeeper:children:
+    - discovery
+  mesos-master:children:
+    - discovery  
+  mesos-agent:children:
+    - worker
+  mesos:children:
+    - mesos-master
+    - mesos-agent
+  marathon:children:
+    - discovery     

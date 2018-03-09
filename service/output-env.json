@@ -1,0 +1,23 @@
+{
+    "id": "output-env",
+    "cmd": "cd mesos-in-action-code-samples-master/output-env-app && bundle install && bundle exec ruby app.rb",
+    "cpus": 0.5,
+    "mem": 128,
+    "disk": 256,
+    "instances": 1,
+    "container": null,
+    "portDefinitions": [
+      {
+        "port": 0,
+        "protocol": "tcp",
+        "name": null,
+        "labels": null
+      }
+    ],
+    "env": {},
+    "labels": {},
+    "healthChecks": [],
+    "uris": [
+      "https://github.com/rji/mesos-in-action-code-samples/archive/master.zip"
+    ]
+}

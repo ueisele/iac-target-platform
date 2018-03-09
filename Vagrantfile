@@ -1,34 +1,20 @@
 VAGRANTFILE_API_VERSION = "2"
 
-domainname = ENV['DOMAIN_NAME']
-publiclb_ip = ENV['PUBLICLB_IP']
+require 'yaml'
 
-cluster = {
-  "discovery1" => { :ip => "192.168.17.20", :cpus => 2, :mem => 4092 },
-  "discovery2" => { :ip => "192.168.17.21", :cpus => 2, :mem => 4092 },
-  "discovery3" => { :ip => "192.168.17.22", :cpus => 2, :mem => 4092 },
-  "lb1" => { :ip => "192.168.17.11", :cpus => 2, :mem => 2048 },
-  "lb2" => { :ip => "192.168.17.12", :cpus => 2, :mem => 2048 },
-  "worker1"    => { :ip => "192.168.17.100", :cpus => 4, :mem => 8192 },
-  "worker2"    => { :ip => "192.168.17.101", :cpus => 4, :mem => 8192 },
-  "worker3"    => { :ip => "192.168.17.102", :cpus => 4, :mem => 8192 },
-  "worker4"    => { :ip => "192.168.17.103", :cpus => 4, :mem => 8192 }
-}
+current_dir    = File.dirname(File.expand_path(__FILE__))
+platform       = YAML.load_file("#{current_dir}/platform.yml").deep_symbolize_keys
 
-groups = {
-  "consul-server" => ["discovery1", "discovery2", "discovery3"],
-  "consul-agent" => ["lb1", "lb2", "worker1", "worker2", "worker3", "worker4"],
-  "consul:children" => ["consul-server", "consul-agent"],
-  "public-lb" => ["lb1", "lb2"],
-  "zookeeper" => ["discovery1", "discovery2", "discovery3"],
-  "mesos-master" => ["discovery1", "discovery2", "discovery3"],
-  "mesos-agent" => ["worker1", "worker2", "worker3", "worker4"],
-  "mesos:children" => ["mesos-master", "mesos-agent"]
-}
+domainname = platform[:domain]
+publiclbip = platform[:publiclbip]
+cluster = platform[:hosts]
+groups = platform[:groups]
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  cluster.each_with_index do |(hostname, info), index|
+  cluster.each_with_index do |(hostsymbol, info), index|
+    
+    hostname = hostsymbol.to_s
 
     config.vm.define hostname do |cfg|
       cfg.vm.hostname = hostname + "." + domainname
@@ -61,7 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = "provisioning/playbook.yml"
     ansible.extra_vars = {
       domainname: domainname,
-      publiclb_ip: publiclb_ip
+      publiclbip: publiclbip
     }    
   end # end provision
 
