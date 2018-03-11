@@ -183,4 +183,4 @@ https://github.com/ueisele/mesos-deb-packaging
 * Mesos agent on windows.
 - Run Windows and Linux Docker container in a single Mesos cluser.
 * Use lightweight Vagrant box to improve startup performance.
-* Provide ansible in a python virtualenv
+* Provide Ansible in a python virtualenv
