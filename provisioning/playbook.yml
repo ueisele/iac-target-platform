@@ -1,12 +1,19 @@
 ---
 - name: Common Tools
   hosts: all
+  tags:
+    - infra
+    - tools    
   become: yes
   roles:
     - role: tools
 
 - name: Resolvconf Setup
   hosts: all
+  tags:
+    - infra
+    - network
+    - resolvconf    
   become: yes
   roles:
     - role: resolvconf
@@ -16,6 +23,10 @@
 
 - name: Java Setup
   hosts: all
+  tags:
+    - infra
+    - language
+    - java    
   become: yes
   roles:
     - role: geerlingguy.java
@@ -24,12 +35,19 @@
 
 - name: Ruby Setup
   hosts: all
+  tags:
+    - infra
+    - language
+    - ruby  
   become: yes
   roles:
     - role: ruby       
 
 - name: Consul Setup
   hosts: consul
+  tags:
+    - infra
+    - consul  
   become: yes
   roles:
     - role: consul
@@ -40,6 +58,10 @@
 
 - name: Traefik Setup
   hosts: public-lb
+  tags:
+    - infra
+    - traefik
+    - public-lb  
   become: yes
   roles:
     - role: traefik
@@ -49,6 +71,10 @@
 
 - name: Heartbeat Setup for Public LB
   hosts: public-lb
+  tags:
+    - infra
+    - heartbeat
+    - public-lb  
   become: yes
   roles:
     - role: heartbeat
@@ -58,6 +84,9 @@
 
 - name: Zookeeper Setup
   hosts: zookeeper
+  tags:
+    - infra
+    - zookeeper  
   become: yes
   roles:
     - role: AnsibleShipyard.ansible-zookeeper
@@ -67,11 +96,14 @@
 
 - name: Mesos Setup
   hosts: mesos
+  tags:
+    - infra
+    - mesos  
   become: yes
   roles:
     - role: mesos
       mesos_version: "1.5.0"
-      mesos_checksum: "sha256:7a10ee3a05666be7b415e16cc823de4f0e49dbb0ac9fa0d0ccc664e4523818d0"
+      mesos_checksum: "sha256:a9acc24659d414abde1e2680877e6fb18e00654a43ef9ce6b03d68912a1a6aee"
       zookeeper_hosts: "{{ groups['zookeeper'] }}"  
       mesos_master_hosts: "{{ groups['mesos-master'] }}"
       mesos_master_options_additional:
@@ -81,6 +113,9 @@
 
 - name: Marathon Setup
   hosts: marathon
+  tags:
+    - infra
+    - marathon
   become: yes
   roles:
     - role: marathon
@@ -88,5 +123,5 @@
       marathon_checksum: "sha256:fe5400507092909661a71365f5a36dec2fa12ee2a6f92e248b5a074a9566973c"
       zookeeper_hosts: "{{ groups['zookeeper'] }}"
       marathon_extra_options:
-        framework_name: "marathon"
+        framework_name: "marathon"      
         
