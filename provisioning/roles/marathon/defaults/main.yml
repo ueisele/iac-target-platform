@@ -1,7 +1,7 @@
 ---
-marathon_version: "1.5.5"
-marathon_checksum: "sha256:fe5400507092909661a71365f5a36dec2fa12ee2a6f92e248b5a074a9566973c"
-marathon_package_url: "https://downloads.mesosphere.com/marathon/releases/{{ marathon_version }}/marathon-{{ marathon_version }}.tgz"
+marathon_version: "1.6.322-2bf46b341"
+marathon_checksum: "sha256:fab4776cd86259ea906de2e6c14eefd80c9933ad8de8f5c18ca1d61f7b797995"
+marathon_package_url: "https://downloads.mesosphere.com/marathon/releases/{{ marathon_version.split('-')[0] }}/marathon-{{ marathon_version }}.tgz"
 marathon_path_base: "/opt"
 marathon_path_root: "{{ marathon_path_base }}/marathon"
 marathon_path_bin: "{{ marathon_path_root }}/bin"

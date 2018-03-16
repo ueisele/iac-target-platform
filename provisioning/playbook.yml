@@ -119,8 +119,8 @@
   become: yes
   roles:
     - role: marathon
-      marathon_version: "1.5.5"
-      marathon_checksum: "sha256:fe5400507092909661a71365f5a36dec2fa12ee2a6f92e248b5a074a9566973c"
+      marathon_version: "1.6.322-2bf46b341"
+      marathon_checksum: "sha256:fab4776cd86259ea906de2e6c14eefd80c9933ad8de8f5c18ca1d61f7b797995"
       zookeeper_hosts: "{{ groups['zookeeper'] }}"
       marathon_extra_options:
         framework_name: "marathon"      
