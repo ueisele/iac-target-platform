@@ -3,24 +3,36 @@ set -e
 pushd . > /dev/null
 cd $(dirname ${BASH_SOURCE[0]})
 CWD_ROOT=`pwd`
-export CONFIG_FILE="${CWD_ROOT}/platform.yml"
+CWD_ENV_BASE="${CWD_ROOT}/environment"
+export PROVISION_DIR="${CWD_ROOT}/provisioning"
+export PROVISION_PLAYBOOK="${PROVISION_DIR}/playbook.yml"
 popd > /dev/null
 
-function parse_yaml {
-   local prefix=$2
-   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
-   sed -ne "s|^\($s\):|\1|" \
-        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
-        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
-   awk -F$fs '{
-      indent = length($1)/2;
-      vname[indent] = $2;
-      for (i in vname) {if (i > indent) {delete vname[i]}}
-      if (length($3) > 0) {
-         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
-         printf("%s%s%s=\"%s\"\n", "'$prefix'", toupper(vn), toupper($2), $3);
-      }
-   }'
+function environment_root() {
+    local env=${1:?'Requires environment as first parameter!'}
+    echo -e "${CWD_ENV_BASE}/${env}"
 }
 
-eval $(parse_yaml ${CONFIG_FILE} "PLATFORM_")
+function environment_inventory() {
+    local env=${1:?'Requires environment as first parameter!'}
+    echo -e "$(environment_root $1)/inventory"
+}
+
+function environments() {
+    local envs=()
+    for env in $(ls ${CWD_ENV_BASE}); do
+        if [ -d $(environment_inventory ${env}) ]; then
+            envs+=(${env})
+        fi
+    done
+    echo ${envs[@]}
+}
+
+function is_env() {
+    local env=${1:?'Requires environment as first parameter!'}
+    if [[ "$(environments)[@]" =~ "${env}" ]]; then
+        echo true
+    else
+        echo false
+    fi
+}

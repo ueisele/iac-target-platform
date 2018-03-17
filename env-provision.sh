@@ -2,14 +2,14 @@
 set -e
 pushd . > /dev/null
 cd $(dirname ${BASH_SOURCE[0]})
-CWD_DESTROY=`pwd`
 source ./env.sh
+source ./env-ansible-playbook.sh
 popd > /dev/null
 
-function destroy () {
-    (cd ${CWD_DESTROY} && vagrant destroy -f)
+function provision () {
+    ansible_playbook "$@" ${PROVISION_PLAYBOOK}
 }
 
 if [ "${BASH_SOURCE[0]}" == "$0" ]; then
-    destroy
+    provision "$@"
 fi

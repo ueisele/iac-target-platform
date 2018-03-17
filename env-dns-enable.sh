@@ -2,15 +2,13 @@
 set -e
 pushd . > /dev/null
 cd $(dirname ${BASH_SOURCE[0]})
-CWD_UP=`pwd`
-source ./env.sh
+source ./env-run-cmd.sh
 popd > /dev/null
 
-function up () {
-    (cd ${CWD_UP} && vagrant up --no-provision)
-    (cd ${CWD_UP} && vagrant provision)
+function dns_enable () {
+    run_cmd $1 "dns-enable.sh"
 }
 
 if [ "${BASH_SOURCE[0]}" == "$0" ]; then
-    up
+    dns_enable "$@"
 fi

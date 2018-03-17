@@ -18,8 +18,8 @@
   roles:
     - role: resolvconf
       config_resolvconf:
-        - "domain {{ domainname }}"
-        - "search {{ domainname }} service.consul"
+        - "domain {{ domain }}"
+        - "search {{ domain }} service.consul"
 
 - name: Java Setup
   hosts: all
@@ -67,7 +67,7 @@
     - role: traefik
       traefik_version: "1.5.4"
       traefik_checksum: "sha256:8f7b2d3d7e893d2bc9310ecda2b8654c3a2b2b5e267b3bdf3f36b55ba21b5813"
-      public_domain: "public.{{ domainname }}"
+      public_domain: "public.{{ domain }}"
 
 - name: Heartbeat Setup for Public LB
   hosts: public-lb
@@ -78,7 +78,7 @@
   become: yes
   roles:
     - role: heartbeat
-      heartbeat_authkey: "heartbeat.{{ domainname }}"
+      heartbeat_authkey: "heartbeat.{{ domain }}"
       heartbeat_virtual_ip: "{{ publiclbip }}"
       heartbeat_member_hosts: "{{ groups['public-lb'] }}"
 
@@ -107,7 +107,7 @@
       zookeeper_hosts: "{{ groups['zookeeper'] }}"  
       mesos_master_hosts: "{{ groups['mesos-master'] }}"
       mesos_master_options_additional:
-        cluster: "mesos.{{ domainname }}"
+        cluster: "mesos.{{ domain }}"
       mesos_agent_options_additional:
         isolation: "cgroups/cpu,cgroups/mem,filesystem/linux"
 

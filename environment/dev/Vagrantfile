@@ -6,9 +6,7 @@ current_dir    = File.dirname(File.expand_path(__FILE__))
 platform       = YAML.load_file("#{current_dir}/platform.yml").deep_symbolize_keys
 
 domainname = platform[:domain]
-publiclbip = platform[:publiclbip]
 cluster = platform[:hosts]
-groups = platform[:groups]
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
@@ -18,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.define hostname do |cfg|
       cfg.vm.hostname = hostname + "." + domainname
-      cfg.vm.box = "debian/contrib-stretch64"
+      cfg.vm.box = info[:vm][:box]
       
       cfg.vm.network :private_network, ip: info[:ip]
 
@@ -27,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.name = domainname + "_" + hostname
         vb.cpus = info[:cpus]
         vb.memory = info[:mem]
-        vb.customize ["modifyvm", :id, "--ostype", "Debian_64"]
+        vb.customize ["modifyvm", :id, "--ostype", info[:vm][:ostype]]
         vb.customize ["modifyvm", :id, "--pagefusion", "on"]
         vb.customize ["modifyvm", :id, "--hwvirtex", "on"]
       end # end provider
@@ -39,18 +37,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell, inline: "bash -c \"echo 127.0.0.1\tlocalhost > /etc/hosts\""
   config.vm.provision :shell, inline: "bash -c \"echo $(hostname -i)\t$(hostname -f) $(hostname) >> /etc/hosts\""
   
-  config.vm.provision :ansible do |ansible|
-    ansible.galaxy_command = 'ansible-galaxy install --role-file=%{role_file} --roles-path=%{roles_path}'
-    ansible.galaxy_role_file = 'requirements.yml'
-    ansible.galaxy_roles_path = 'provisioning/roles-galaxy'
-    ansible.groups = groups   
-    ansible.playbook = "provisioning/playbook.yml"
-    ansible.extra_vars = {
-      domainname: domainname,
-      publiclbip: publiclbip
-    }    
-  end # end provision
-
   config.landrush.enabled = true
   config.landrush.tld = domainname
   config.landrush.guest_redirect_dns = true

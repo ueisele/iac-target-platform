@@ -1,48 +1,58 @@
 ---
-domain: "platform.dev"
-publiclbip: "192.168.17.10"
+domain: &domain "platform.dev"
+publiclbip: &publicip "192.168.17.10"
 
-vm:
-  box: "debian/contrib-stretch64"
-  ostype: "Debian_64"
+default:
+  vm: &defaultvm
+    box: "debian/contrib-stretch64"
+    ostype: "Debian_64"
 
 hosts:
   discovery1:
     ip: "192.168.17.21"
     cpus: 2
     mem: 4092
+    vm: *defaultvm
   discovery2:
     ip: "192.168.17.22"
     cpus: 2
     mem: 4092
+    vm: *defaultvm   
   discovery3:
     ip: "192.168.17.23"
     cpus: 2
     mem: 4092    
+    vm: *defaultvm   
   lb1:
     ip: "192.168.17.11"
     cpus: 2
     mem: 2048
+    vm: *defaultvm  
   lb2:
     ip: "192.168.17.12"
     cpus: 2
     mem: 2048
+    vm: *defaultvm   
   worker1:
     ip: "192.168.17.101"
     cpus: 4
-    mem: 8192    
+    mem: 8192
+    vm: *defaultvm   
   worker2:
     ip: "192.168.17.102"
     cpus: 4
-    mem: 8192    
+    mem: 8192
+    vm: *defaultvm  
   worker3:
     ip: "192.168.17.103"
     cpus: 4
-    mem: 8192    
+    mem: 8192
+    vm: *defaultvm  
   worker4:
     ip: "192.168.17.104"
     cpus: 4
-    mem: 8192        
+    mem: 8192
+    vm: *defaultvm
     
 groups:
   discovery:
@@ -71,4 +81,7 @@ groups:
     - mesos-master
     - mesos-agent
   marathon:children:
-    - discovery     
+      - discovery
+  all:vars:
+      - domain: *domain
+      - publiclbip: *publicip

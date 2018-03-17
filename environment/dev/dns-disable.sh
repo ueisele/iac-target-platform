@@ -6,7 +6,8 @@ source ./env.sh
 popd > /dev/null
 
 function dns_disable () {
-    for file in $(find /etc/NetworkManager/dnsmasq.d/ -name "*${PLATFORM_DOMAIN/./-}*"); do
+    local domain=$(config domain)
+    for file in $(find /etc/NetworkManager/dnsmasq.d/ -name "*${domain/./-}*"); do
         sudo rm ${file}
     done
     sudo systemctl restart NetworkManager
