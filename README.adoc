@@ -33,7 +33,7 @@ Currently this repository contains only a Vagrant environment. For now, the furt
 
 . Access the Consul UI (with activated hostname resolution from host)
 
-    http://consul-http.public.platform.dev/ui/
+    http://consul-http.public.dev.test/ui/
 
 . Access the Consul UI (with disabled hostname resolution from host)
 
@@ -82,12 +82,12 @@ The Consul domain is `consul`.
 ==== Endpoints
 
 * Consul UI
-- http://consul-http.public.platform.dev/ui/
+- http://consul-http.public.dev.test/ui/
 - http://consul-http.service.consul:8500/ui/
-- http://discovery1.platform.dev:8500/ui/
+- http://discovery1.dev.test:8500/ui/
 - http://192.168.17.21:8500/ui/
 * Consul DNS
-- discovery1.platform.dev:8600
+- discovery1.dev.test:8600
 - 192.168.17.21:8600
 
 ==== Documentation
@@ -99,21 +99,21 @@ The Consul domain is `consul`.
 Traefik is the public service facade and load balancer. Basically it is a HTTP reverse proxy.
 What it distinguishes is the ability to automatically publish services registered at Consul.
 
-The public domain is `public.platform.dev`.
+The public domain is `public.dev.test`.
 
 If you have not enabled DNS, Traefik can be tested by manually defining the _Host_ attribute in a request.
 
 [source,bash]
 ----
-curl --header 'Host: consul-http.public.platform.dev' http://<<traefik_container_ip>>:80
+curl --header 'Host: consul-http.public.dev.test' http://<<traefik_container_ip>>:80
 ----
 
 ==== Endpoints
 
 * Traefik UI
-- http://traefik-http.public.platform.dev/
+- http://traefik-http.public.dev.test/
 - http://traefik-http.service.consul:8080/
-- http://lb1.platform.dev:8080/
+- http://lb1.dev.test:8080/
 - http://192.168.17.11:8080/
 
 ==== Documentation
@@ -135,14 +135,14 @@ https://github.com/ueisele/mesos-deb-packaging
 ==== Endpoints
 
 * Apache Mesos Master
-- http://mesos-master-http.public.platform.dev/
+- http://mesos-master-http.public.dev.test/
 - http://mesos-master-http.service.consul:5050/
-- http://discovery1.platform.dev:5050/
+- http://discovery1.dev.test:5050/
 - http://192.168.17.21:5050/
 
 * Apache Mesos Agent
 - http://mesos-agent-http.service.consul:5051/
-- http://worker[1-4].platform.dev:5051/
+- http://worker[1-4].dev.test:5051/
 - http://192.168.17.10[0-3]:5051/
 
 ==== Documentation
@@ -159,9 +159,9 @@ https://github.com/ueisele/mesos-deb-packaging
 ==== Endpoints
 
 * Marathon UI
-- http://marathon-http.public.platform.dev/
+- http://marathon-http.public.dev.test/
 - http://marathon-http.service.consul:8080/
-- http://discovery1.platform.dev:8080/
+- http://discovery1.dev.test:8080/
 - http://192.168.17.21:8080/
 
 ==== Documentation

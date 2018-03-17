@@ -8,7 +8,7 @@ popd > /dev/null
 function ssh () {
     local env=${1:?'Requires environment as first parameter!'}
     shift
-    run_cmd ${env} "ssh.sh" "$@"
+    run_cmd ${env} "./ssh.sh" "$@"
 }
 
 if [ "${BASH_SOURCE[0]}" == "$0" ]; then

@@ -14,7 +14,7 @@ function run_cmd () {
     local cmd=${2:?'Requires command as second parameter!'}
     shift
     shift
-    "$(environment_root ${env})/${cmd}" "$@"
+    (cd $(environment_root ${env}) && ${cmd} "$@")
 }
 
 if [ "${BASH_SOURCE[0]}" == "$0" ]; then

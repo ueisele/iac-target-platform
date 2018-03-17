@@ -1,5 +1,5 @@
 ---
-domain: &domain "platform.dev"
+domain: &domain "dev.test"
 publiclbip: &publicip "192.168.17.10"
 
 default:
