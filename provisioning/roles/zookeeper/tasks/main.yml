@@ -1,0 +1,77 @@
+---
+- name: "Ensure the tarball dir exists at {{ zookeeper_tarball_dir }}"
+  file: path={{ zookeeper_tarball_dir }} state=directory  
+
+- name: Download Zookeeper and Check
+  get_url:
+    url: "{{ zookeeper_package_url }}"
+    dest: "{{ zookeeper_tarball_dir }}"
+    checksum: "{{ zookeeper_checksum }}"
+    timeout: 100
+  register: package  
+  until: package|succeeded
+  retries: 5 
+
+- group: name=zookeeper system=yes
+- user: name=zookeeper group=zookeeper system=yes   
+
+- name: Install Zookeeper
+  unarchive:
+    src: "{{ package.dest }}"
+    dest: "{{ zookeeper_dir_base }}"
+    remote_src: yes 
+    owner: zookeeper
+    group: zookeeper
+
+- name: Create Symlink to Zookeeper
+  file:
+    src: "{{ zookeeper_dir_extracted }}"
+    dest: "{{ zookeeper_dir }}"
+    state: link
+    owner: zookeeper
+    group: zookeeper
+
+- name: "Create zookeeper {{ item }} directory."
+  file: path={{ item }} state=directory owner=zookeeper group=zookeeper
+  with_items:
+    - "{{ zookeeper_data_dir }}"
+    - "{{ zookeeper_log_dir }}"
+
+- name: Add zookeeper's bin dir to the PATH
+  copy: content="export PATH=$PATH:{{ zookeeper_dir }}/bin" dest="/etc/profile.d/zookeeper_path.sh" mode=755
+
+- name: Write myid file.
+  template: src=myid.j2 dest={{ zookeeper_data_dir }}/myid owner=zookeeper group=zookeeper
+  notify:
+    - restart zookeeper
+
+- name: Configure zookeeper zoo.cfg
+  template: src=zoo.cfg.j2 dest={{ zookeeper_dir }}/conf/zoo.cfg owner=zookeeper group=zookeeper
+  notify:
+    - restart zookeeper
+
+- name: Configure zookeeper-env.sh
+  template: src=zookeeper-env.sh.j2 dest={{ zookeeper_dir }}/conf/zookeeper-env.sh owner=zookeeper group=zookeeper
+  notify:
+    - restart zookeeper
+
+- name: Update the log4j config with saner production values
+  template: src=log4j.properties.j2 dest={{ zookeeper_dir }}/conf/log4j.properties
+  notify:
+    - restart zookeeper
+
+- name: Systemd script.
+  template: src=zookeeper.service.j2 dest=/lib/systemd/system/zookeeper.service
+  notify:
+    - reload systemctl daemon
+    - restart zookeeper
+
+- name: Enable zookeeper service
+  systemd:
+    name: zookeeper
+    enabled: yes
+
+- name: Ensure Zookeeper is registerd as Consul service
+  template: src=zookeeper.consulservice.json.j2 dest=/etc/consul.d/zookeeper.consulservice.json
+  notify: 
+    - restart consul agent

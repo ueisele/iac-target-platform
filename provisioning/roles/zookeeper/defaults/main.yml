@@ -1,0 +1,31 @@
+---
+zookeeper_version: '3.4.11'
+zookeeper_checksum: 'sha256:f6bd68a1c8f7c13ea4c2c99f13082d0d71ac464ffaf3bf7a365879ab6ad10e84'
+zookeeper_package_url: "http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz"
+
+zookeeper_tarball_dir: '/opt/src'
+zookeeper_dir_base: '/opt'
+zookeeper_dir_extracted: "{{ zookeeper_dir_base }}/zookeeper-{{ zookeeper_version }}"
+zookeeper_dir: '/opt/zookeeper'
+zookeeper_data_dir: '/var/lib/zookeeper'
+zookeeper_log_dir: '/var/log/zookeeper'
+
+zookeeper_client_port: 2181
+zookeeper_init_limit: 5
+zookeeper_sync_limit: 2
+zookeeper_tick_time: 2000
+zookeeper_autopurge_purgeInterval: 1
+zookeeper_autopurge_snapRetainCount: 10
+zookeeper_cluster_ports: '2888:3888'
+
+# Rolling file appender setttings
+zookeeper_rolling_log_file_max_size: 20MB
+zookeeper_max_rolling_log_file_count: 10
+
+# List of dict (i.e. {zookeeper_hosts:[{host:,id:},{host:,id:},...]})
+zookeeper_hosts:
+  - host: "{{inventory_hostname}}" # the machine running
+    id: 1
+
+# Dict of ENV settings to be written into the (optional) conf/zookeeper-env.sh
+zookeeper_env: {}

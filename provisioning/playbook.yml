@@ -89,8 +89,9 @@
     - zookeeper  
   become: yes
   roles:
-    - role: AnsibleShipyard.ansible-zookeeper
+    - role: zookeeper
       zookeeper_version: "3.4.11"
+      zookeeper_checksum: 'sha256:f6bd68a1c8f7c13ea4c2c99f13082d0d71ac464ffaf3bf7a365879ab6ad10e84'
       zookeeper_hosts: "{{ groups['zookeeper'] }}"
       tick_time: 4000
 

@@ -1,0 +1,15 @@
+---
+- name: reload systemctl daemon
+  systemd:
+    name: zookeeper
+    daemon_reload: yes
+
+- name: restart zookeeper
+  systemd:
+    name: zookeeper
+    state: restarted
+
+- name: restart consul agent
+  systemd:
+    name: consul
+    state: restarted  
