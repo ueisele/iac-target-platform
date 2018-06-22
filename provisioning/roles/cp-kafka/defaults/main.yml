@@ -15,6 +15,11 @@ confluent_dir_common: "{{ confluent_dir_base }}/confluent"
 confluent_kafka_data_dir: '/var/lib/confluent/kafka'
 confluent_log_dir: '/var/log/confluent'
 
+# List of dict (i.e. {kafka_hosts:[{host:,id:},{host:,id:},...]})
+kafka_hosts:
+  - host: "{{inventory_hostname}}" # the machine running
+    id: 1
+
 zookeeper_hosts:
   - localhost
 zookeeper_connect:  "{% for host in zookeeper_hosts %}{% if loop.index > 1 %},{% endif %}{{host}}:2181{% endfor %}/kafka"
