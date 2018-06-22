@@ -1,0 +1,20 @@
+---
+confluent_major_version: '4.1'
+confluent_patch_version: '1'
+confluent_version: "{{ confluent_major_version }}.{{ confluent_patch_version }}"
+scala_version: '2.11'
+confluent_checksum: 'sha256:e00eb4c6c7445ad7a43c9cd237778d1cd184322aebf5ff64a8e9806ba2cc27aa'
+confluent_package_url: "http://packages.confluent.io/archive/{{ confluent_major_version }}/confluent-oss-{{ confluent_version }}-{{ scala_version }}.tar.gz"
+
+confluent_dir_package: '/opt/src'
+confluent_dir_extracted: "{{ confluent_dir_package }}/confluent-oss-{{ confluent_version }}-{{ scala_version }}/confluent-{{ confluent_version }}"
+confluent_dir_base: '/opt'
+confluent_dir_specific: "{{ confluent_dir_base }}/confluent-{{ confluent_version }}"
+confluent_dir_common: "{{ confluent_dir_base }}/confluent"
+
+confluent_kafka_data_dir: '/var/lib/confluent/kafka'
+confluent_log_dir: '/var/log/confluent'
+
+zookeeper_hosts:
+  - localhost
+zookeeper_connect:  "{% for host in zookeeper_hosts %}{% if loop.index > 1 %},{% endif %}{{host}}:2181{% endfor %}/kafka"

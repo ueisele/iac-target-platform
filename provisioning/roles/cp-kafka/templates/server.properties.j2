@@ -1,0 +1,22 @@
+# Kafka Version: 1.1.1-cp1
+# https://kafka.apache.org/11/documentation.html
+
+broker.id={{ broker_id }}
+
+log.dirs={{ confluent_kafka_data_dir }}
+
+zookeeper.connect={{ zookeeper_connect }}
+listeners=PLAINTEXT://:9092
+
+auto.create.topics.enable=false
+delete.topic.enable=true
+num.partitions=6
+default.replication.factor=3
+min.insync.replicas=2
+num.replica.fetchers=2
+#more than one because of EBS
+num.recovery.threads.per.data.dir=2
+log.retention.hours=96
+log.roll.hours=48
+
+confluent.support.metrics.enable=false

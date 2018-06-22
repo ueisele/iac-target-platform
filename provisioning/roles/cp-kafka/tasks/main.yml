@@ -1,0 +1,62 @@
+---
+- name: "Ensure the package base directory {{ confluent_dir_package }} is present"
+  file: path={{ confluent_dir_package }} state=directory  
+
+- name: Confluent OSS {{ confluent_version }} is downloaded
+  get_url:
+    url: "{{ confluent_package_url }}"
+    dest: "{{ confluent_dir_package }}"
+    checksum: "{{ confluent_checksum }}"
+    timeout: 600
+  register: package  
+  until: package|succeeded
+  retries: 5 
+
+- group: name=confluent system=yes
+- user: name=confluent group=confluent system=yes   
+
+- name: Confluent  OSS {{ confluent_version }} is installed
+  unarchive:
+    src: "{{ package.dest }}"
+    dest: "{{ confluent_dir_base }}"
+    extra_opts: [--strip-components=1]
+    remote_src: yes 
+    owner: confluent
+    group: confluent
+
+- name: "Ensure the package base directory {{ confluent_dir_package }} is absent"
+  file: path={{ confluent_dir_package }} state=absent 
+
+- name: Confluent Symlink is present
+  file:
+    src: "{{ confluent_dir_specific }}"
+    dest: "{{ confluent_dir_common }}"
+    state: link
+    owner: confluent
+    group: confluent
+
+- name: "Confluent {{ item }} directory is present"
+  file: path={{ item }} state=directory owner=confluent group=confluent
+  with_items:
+    - "{{ confluent_log_dir }}"
+    - "{{ confluent_kafka_data_dir }}"
+    - "{{ confluent_dir_common }}/data"
+
+- name: Symlink to Confluent logs directory is present
+  file:
+    src: "{{ confluent_dir_common }}/logs"
+    dest: "{{ confluent_logs_dir }}"
+    state: link
+    owner: confluent
+    group: confluent
+    
+- name: Symlink to Kafka data directory is present
+  file:
+    src: "{{ confluent_dir_common }}/data/kafka"
+    dest: "{{ confluent_kafka_data_dir }}"
+    state: link
+    owner: confluent
+    group: confluent
+
+- name: Confluents binaries directory is in the system path
+  copy: content="export PATH=$PATH:{{ confluent_dir_common }}/bin" dest="/etc/profile.d/confluent_path.sh" mode=755
